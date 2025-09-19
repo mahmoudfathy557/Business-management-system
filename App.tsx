@@ -1,20 +1,26 @@
+import React, { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import { PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { store } from './src/redux/store';
+import AppNavigator from './src/navigation/AppNavigator';
+import ErrorBoundary from './src/components/ErrorBoundary';
+import { loadUserFromStorage } from './src/redux/slices';
 
 export default function App() {
+  useEffect(() => {
+    // Load user from storage on app start
+    store.dispatch(loadUserFromStorage());
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <PaperProvider>
+          <AppNavigator />
+          <StatusBar style="auto" />
+        </PaperProvider>
+      </Provider>
+    </ErrorBoundary>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
