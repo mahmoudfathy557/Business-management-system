@@ -381,4 +381,5 @@ For support and questions:
 
 **Note**: This is a full-stack application with both frontend (React Native) and backend (NestJS + MongoDB) components. Make sure to set up both parts for a fully functional system.
 #   B u s i n e s s - m a n a g e m e n t - s y s t e m  
+ #   B u s i n e s s - m a n a g e m e n t - s y s t e m  
  
