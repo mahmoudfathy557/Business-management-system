@@ -4,6 +4,8 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
+  isActive: boolean;
+  lastLogin?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -46,6 +48,7 @@ export interface Product {
   minStockLevel: number;
   barcode?: string;
   imageUrl?: string;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -70,6 +73,7 @@ export interface Car {
   driverId?: string;
   driver?: User;
   assignedProducts: CarProduct[];
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -101,8 +105,22 @@ export interface Expense {
   amount: number;
   description: string;
   carId?: string;
+  car?: {
+    id: string;
+    plateNumber: string;
+    model: string;
+    year: number;
+  };
   date: string;
   createdAt: string;
+  updatedAt: string;
+  createdBy: {
+    id: string;
+    name: string;
+    email: string;
+    role: UserRole;
+  };
+  isActive: boolean;
 }
 
 export enum ExpenseType {

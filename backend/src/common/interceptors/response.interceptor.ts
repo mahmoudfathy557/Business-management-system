@@ -6,36 +6,31 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-export interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-    message?: string;
-}
+import { ApiResponseDto, PaginatedResponseDto } from '../dto/api-response.dto';
 
 @Injectable()
-export class ResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<T> | T> {
-    intercept(context: ExecutionContext, next: CallHandler): Observable<ApiResponse<T> | T> {
-        const request = context.switchToHttp().getRequest();
-        const url = request.url;
-
-        // Don't wrap auth endpoints - they return direct responses
-        if (url.includes('/auth/login') || url.includes('/auth/register')) {
-            return next.handle();
-        }
-
-        // Don't wrap paginated responses - they have their own structure
-        if (url.includes('/products') && request.method === 'GET' && (request.query.page || request.query.limit)) {
-            return next.handle();
-        }
-
-        // Wrap all other responses
+export class ResponseInterceptor<T> implements NestInterceptor<T, ApiResponseDto<T> | PaginatedResponseDto<T>> {
+    intercept(context: ExecutionContext, next: CallHandler): Observable<ApiResponseDto<T> | PaginatedResponseDto<T>> {
         return next.handle().pipe(
-            map((data) => ({
-                success: true,
-                data,
-                message: 'Operation successful',
-            })),
+            map((data) => {
+                // If data is already an ApiResponse, return it
+                if (data && typeof data === 'object' && 'success' in data) {
+                    return data;
+                }
+
+                // If data has pagination structure, return it as PaginatedResponseDto
+                if (data && typeof data === 'object' && 'data' in data && 'total' in data && 'page' in data) {
+                    return new PaginatedResponseDto(
+                        data.data,
+                        data.total,
+                        data.page,
+                        data.limit
+                    );
+                }
+
+                // For simple data, wrap in success response
+                return ApiResponseDto.success(data);
+            }),
         );
     }
 }

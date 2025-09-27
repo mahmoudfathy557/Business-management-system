@@ -76,9 +76,9 @@ class ApiService {
     return response.data;
   }
 
-  async getProfile(): Promise<ApiResponse<User>> {
+  async getProfile(): Promise<User> {
     const response: AxiosResponse<ApiResponse<User>> = await this.api.get('/auth/profile');
-    return response.data;
+    return response.data.data;
   }
 
   // Product APIs
@@ -89,164 +89,156 @@ class ApiService {
     return response.data;
   }
 
-  async getProduct(id: string): Promise<ApiResponse<Product>> {
+  async getProduct(id: string): Promise<Product> {
     const response: AxiosResponse<ApiResponse<Product>> = await this.api.get(`/products/${id}`);
-    return response.data;
+    return response.data.data;
   }
 
-  async createProduct(data: ProductFormData): Promise<ApiResponse<Product>> {
+  async createProduct(data: ProductFormData): Promise<Product> {
     const response: AxiosResponse<ApiResponse<Product>> =
       await this.api.post('/products', data);
-    return response.data;
+    return response.data.data;
   }
 
-  async updateProduct(id: string, data: Partial<ProductFormData>): Promise<ApiResponse<Product>> {
+  async updateProduct(id: string, data: Partial<ProductFormData>): Promise<Product> {
     const response: AxiosResponse<ApiResponse<Product>> =
       await this.api.put(`/products/${id}`, data);
-    return response.data;
+    return response.data.data;
   }
 
-  async deleteProduct(id: string): Promise<ApiResponse<void>> {
-    const response: AxiosResponse<ApiResponse<void>> = await this.api.delete(`/products/${id}`);
-    return response.data;
+  async deleteProduct(id: string): Promise<void> {
+    await this.api.delete(`/products/${id}`);
   }
 
-  async updateStock(productId: string, quantity: number, type: 'in' | 'out', reason: string): Promise<ApiResponse<Product>> {
+  async updateStock(productId: string, quantity: number, type: 'in' | 'out', reason: string): Promise<Product> {
     const response: AxiosResponse<ApiResponse<Product>> =
       await this.api.post(`/products/${productId}/stock`, { quantity, type, reason });
-    return response.data;
+    return response.data.data;
   }
 
-  async getStockMovements(productId: string): Promise<ApiResponse<StockMovement[]>> {
+  async getStockMovements(productId: string): Promise<StockMovement[]> {
     const response: AxiosResponse<ApiResponse<StockMovement[]>> =
       await this.api.get(`/products/${productId}/stock-movements`);
-    return response.data;
+    return response.data.data;
   }
 
   // Car APIs
-  async getCars(): Promise<ApiResponse<Car[]>> {
+  async getCars(): Promise<Car[]> {
     const response: AxiosResponse<ApiResponse<Car[]>> = await this.api.get('/cars');
-    return response.data;
+    return response.data.data;
   }
 
-  async getCar(id: string): Promise<ApiResponse<Car>> {
+  async getCar(id: string): Promise<Car> {
     const response: AxiosResponse<ApiResponse<Car>> = await this.api.get(`/cars/${id}`);
-    return response.data;
+    return response.data.data;
   }
 
-  async createCar(data: CarFormData): Promise<ApiResponse<Car>> {
+  async createCar(data: CarFormData): Promise<Car> {
     const response: AxiosResponse<ApiResponse<Car>> = await this.api.post('/cars', data);
-    return response.data;
+    return response.data.data;
   }
 
-  async updateCar(id: string, data: Partial<CarFormData>): Promise<ApiResponse<Car>> {
+  async updateCar(id: string, data: Partial<CarFormData>): Promise<Car> {
     const response: AxiosResponse<ApiResponse<Car>> = await this.api.put(`/cars/${id}`, data);
-    return response.data;
+    return response.data.data;
   }
 
-  async deleteCar(id: string): Promise<ApiResponse<void>> {
-    const response: AxiosResponse<ApiResponse<void>> = await this.api.delete(`/cars/${id}`);
-    return response.data;
+  async deleteCar(id: string): Promise<void> {
+    await this.api.delete(`/cars/${id}`);
   }
 
-  async assignProductToCar(carId: string, productId: string, quantity: number): Promise<ApiResponse<void>> {
-    const response: AxiosResponse<ApiResponse<void>> =
-      await this.api.post(`/cars/${carId}/products`, { productId, quantity });
-    return response.data;
+  async assignProductToCar(carId: string, productId: string, quantity: number): Promise<void> {
+    await this.api.post(`/cars/${carId}/products`, { productId, quantity });
   }
 
-  async removeProductFromCar(carId: string, productId: string): Promise<ApiResponse<void>> {
-    const response: AxiosResponse<ApiResponse<void>> =
-      await this.api.delete(`/cars/${carId}/products/${productId}`);
-    return response.data;
+  async removeProductFromCar(carId: string, productId: string): Promise<void> {
+    await this.api.delete(`/cars/${carId}/products/${productId}`);
   }
 
   // Daily Records APIs
-  async createDailyRecord(data: { carId: string; income: number; expenses: number; notes?: string }): Promise<ApiResponse<DailyRecord>> {
+  async createDailyRecord(data: { carId: string; income: number; expenses: number; notes?: string }): Promise<DailyRecord> {
     const response: AxiosResponse<ApiResponse<DailyRecord>> =
       await this.api.post('/daily-records', data);
-    return response.data;
+    return response.data.data;
   }
 
-  async getDailyRecords(carId?: string, startDate?: string, endDate?: string): Promise<ApiResponse<DailyRecord[]>> {
+  async getDailyRecords(carId?: string, startDate?: string, endDate?: string): Promise<DailyRecord[]> {
     const params = { ...(carId && { carId }), ...(startDate && { startDate }), ...(endDate && { endDate }) };
     const response: AxiosResponse<ApiResponse<DailyRecord[]>> =
       await this.api.get('/daily-records', { params });
-    return response.data;
+    return response.data.data;
   }
 
   // Expense APIs
-  async getExpenses(page: number = 1, limit: number = 10, carId?: string): Promise<PaginatedResponse<Expense>> {
-    const params = { page, limit, ...(carId && { carId }) };
+  async getExpenses(page: number = 1, limit: number = 10, period?: string): Promise<PaginatedResponse<Expense>> {
+    const params = { page, limit, ...(period && { period }) };
     const response: AxiosResponse<PaginatedResponse<Expense>> =
       await this.api.get('/expenses', { params });
     return response.data;
   }
 
-  async createExpense(data: ExpenseFormData): Promise<ApiResponse<Expense>> {
+  async createExpense(data: ExpenseFormData): Promise<Expense> {
     const response: AxiosResponse<ApiResponse<Expense>> = await this.api.post('/expenses', data);
-    return response.data;
+    return response.data.data;
   }
 
-  async updateExpense(id: string, data: Partial<ExpenseFormData>): Promise<ApiResponse<Expense>> {
+  async updateExpense(id: string, data: Partial<ExpenseFormData>): Promise<Expense> {
     const response: AxiosResponse<ApiResponse<Expense>> =
       await this.api.put(`/expenses/${id}`, data);
-    return response.data;
+    return response.data.data;
   }
 
-  async deleteExpense(id: string): Promise<ApiResponse<void>> {
-    const response: AxiosResponse<ApiResponse<void>> = await this.api.delete(`/expenses/${id}`);
-    return response.data;
+  async deleteExpense(id: string): Promise<void> {
+    await this.api.delete(`/expenses/${id}`);
   }
 
   // Dashboard APIs
-  async getDashboardSummary(): Promise<ApiResponse<DashboardSummary>> {
+  async getDashboardSummary(): Promise<DashboardSummary> {
     const response: AxiosResponse<ApiResponse<DashboardSummary>> =
       await this.api.get('/dashboard/summary');
-    return response.data;
+    return response.data.data;
   }
 
   // User Management APIs (Admin only)
-  async getUsers(): Promise<ApiResponse<User[]>> {
+  async getUsers(): Promise<User[]> {
     const response: AxiosResponse<ApiResponse<User[]>> = await this.api.get('/users');
-    return response.data;
+    return response.data.data;
   }
 
-  async createUser(data: RegisterData): Promise<ApiResponse<User>> {
+  async createUser(data: RegisterData): Promise<User> {
     const response: AxiosResponse<ApiResponse<User>> = await this.api.post('/users', data);
-    return response.data;
+    return response.data.data;
   }
 
-  async updateUser(id: string, data: Partial<RegisterData>): Promise<ApiResponse<User>> {
+  async updateUser(id: string, data: Partial<RegisterData>): Promise<User> {
     const response: AxiosResponse<ApiResponse<User>> = await this.api.put(`/users/${id}`, data);
-    return response.data;
+    return response.data.data;
   }
 
-  async deleteUser(id: string): Promise<ApiResponse<void>> {
-    const response: AxiosResponse<ApiResponse<void>> = await this.api.delete(`/users/${id}`);
-    return response.data;
+  async deleteUser(id: string): Promise<void> {
+    await this.api.delete(`/users/${id}`);
   }
 
   // Reports APIs
-  async getSalesReport(startDate: string, endDate: string, carId?: string): Promise<ApiResponse<any>> {
+  async getSalesReport(startDate: string, endDate: string, carId?: string): Promise<any> {
     const params = { startDate, endDate, ...(carId && { carId }) };
     const response: AxiosResponse<ApiResponse<any>> =
       await this.api.get('/reports/sales', { params });
-    return response.data;
+    return response.data.data;
   }
 
-  async getExpenseReport(startDate: string, endDate: string, carId?: string): Promise<ApiResponse<any>> {
+  async getExpenseReport(startDate: string, endDate: string, carId?: string): Promise<any> {
     const params = { startDate, endDate, ...(carId && { carId }) };
     const response: AxiosResponse<ApiResponse<any>> =
       await this.api.get('/reports/expenses', { params });
-    return response.data;
+    return response.data.data;
   }
 
-  async getProfitReport(startDate: string, endDate: string, carId?: string): Promise<ApiResponse<any>> {
+  async getProfitReport(startDate: string, endDate: string, carId?: string): Promise<any> {
     const params = { startDate, endDate, ...(carId && { carId }) };
     const response: AxiosResponse<ApiResponse<any>> =
       await this.api.get('/reports/profit', { params });
-    return response.data;
+    return response.data.data;
   }
 }
 

@@ -4,57 +4,29 @@ import { Text, Card, Title, Button, SegmentedButtons, FAB } from 'react-native-p
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { AppDispatch, RootState } from '../redux/store';
+import { fetchExpenses } from '../redux/slices';
 import ExpenseForm from '../components/ExpenseForm';
 import { Expense, ExpenseType } from '../types';
-import apiService from '../services/api';
 
 const FinanceScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const { user } = useSelector((state: RootState) => state.auth);
 
-    const [expenses, setExpenses] = useState<Expense[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [selectedPeriod, setSelectedPeriod] = useState('today');
-    const [totalExpenses, setTotalExpenses] = useState(0);
-    const [expensesByType, setExpensesByType] = useState<Record<ExpenseType, number>>({
-        [ExpenseType.FUEL]: 0,
-        [ExpenseType.MAINTENANCE]: 0,
-        [ExpenseType.SALARY]: 0,
-        [ExpenseType.OTHER]: 0,
-    });
+
+    const { expenses, totalExpenses, expensesByType, isLoading, error } = useSelector(
+        (state: RootState) => state.expenses
+    );
 
     useEffect(() => {
-        loadExpenses();
-    }, [selectedPeriod]);
-
-    const loadExpenses = async () => {
-        setIsLoading(true);
-        try {
-            const response = await apiService.getExpenses(1, 50);
-            setExpenses(response.data);
-
-            // Calculate totals
-            const total = response.data.reduce((sum, expense) => sum + expense.amount, 0);
-            setTotalExpenses(total);
-
-            // Calculate by type
-            const byType = response.data.reduce((acc, expense) => {
-                acc[expense.type] = (acc[expense.type] || 0) + expense.amount;
-                return acc;
-            }, {} as Record<ExpenseType, number>);
-            setExpensesByType(byType);
-        } catch (error) {
-            console.error('Error loading expenses:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+        dispatch(fetchExpenses({ period: selectedPeriod }));
+    }, [selectedPeriod, dispatch]);
 
     const onRefresh = async () => {
         setRefreshing(true);
-        await loadExpenses();
+        await dispatch(fetchExpenses({ period: selectedPeriod }));
         setRefreshing(false);
     };
 
@@ -178,7 +150,7 @@ const FinanceScreen: React.FC = () => {
                                 </Text>
                             </View>
                         ) : (
-                            expenses.slice(0, 10).map((expense) => (
+                            expenses.slice(0, 10).map((expense: Expense) => (
                                 <ExpenseForm
                                     key={expense.id}
                                     expense={expense}

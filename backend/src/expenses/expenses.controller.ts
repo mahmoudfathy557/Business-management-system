@@ -24,7 +24,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 export class ExpensesController {
-  constructor(private readonly expensesService: ExpensesService) {}
+  constructor(private readonly expensesService: ExpensesService) { }
 
   @Post()
   @Roles(UserRole.ADMIN, UserRole.DRIVER)
@@ -42,18 +42,18 @@ export class ExpensesController {
   @ApiOperation({ summary: 'Get all expenses with pagination' })
   @ApiQuery({ name: 'page', required: false, description: 'Page number' })
   @ApiQuery({ name: 'limit', required: false, description: 'Items per page' })
-  @ApiQuery({ name: 'carId', required: false, description: 'Filter by car ID' })
+  @ApiQuery({ name: 'period', required: false, description: 'Filter by period (today, week, month, year) or car ID' })
   @ApiResponse({ status: 200, description: 'Expenses retrieved successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
   findAll(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
-    @Query('carId') carId?: string,
+    @Query('period') period?: string,
   ) {
     return this.expensesService.findAll(
       parseInt(page),
       parseInt(limit),
-      carId,
+      period,
     );
   }
 

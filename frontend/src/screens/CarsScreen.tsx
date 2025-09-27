@@ -53,8 +53,8 @@ const CarsScreen: React.FC = () => {
     const renderCar = ({ item }: { item: Car }) => (
         <CarCard
             car={item}
-            onPress={() => navigation.navigate('CarDetails' as never, { carId: item.id } as never)}
-            onEdit={() => navigation.navigate('EditCar' as never, { carId: item.id } as never)}
+            onPress={() => (navigation as any).navigate('CarDetails' as never, { carId: item.id } as never)}
+            onEdit={() => (navigation as any).navigate('EditCar' as never, { carId: item.id } as never)}
             onDelete={() => handleDeleteCar(item.id)}
             showActions={user?.role === 'admin'}
         />

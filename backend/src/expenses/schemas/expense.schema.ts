@@ -27,6 +27,9 @@ export class Expense {
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   createdBy: Types.ObjectId;
+
+  @Prop({ default: true })
+  isActive: boolean;
 }
 
 export type ExpenseDocument = Expense & Document;

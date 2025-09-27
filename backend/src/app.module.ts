@@ -13,6 +13,8 @@ import { SeedModule } from './seed/seed.module';
 import { TestModule } from './test/test.module';
 import { RolesGuard } from './auth/roles.guard';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { ErrorInterceptor } from './common/interceptors/error.interceptor';
 
 @Module({
   imports: [
@@ -30,15 +32,23 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     SeedModule,
     TestModule,
   ],
-  providers: [{
-    provide: APP_GUARD,
-    useClass: JwtAuthGuard,
-  },
-  {
-    provide: APP_GUARD,
-    useClass: RolesGuard,
-  },
-
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ErrorInterceptor,
+    },
   ],
 })
 export class AppModule { }

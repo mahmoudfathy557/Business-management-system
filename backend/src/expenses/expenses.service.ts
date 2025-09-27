@@ -8,7 +8,7 @@ import { CreateExpenseDto, UpdateExpenseDto, ExpenseReportDto } from './dto/expe
 export class ExpensesService {
   constructor(
     @InjectModel(Expense.name) private expenseModel: Model<ExpenseDocument>,
-  ) {}
+  ) { }
 
   async create(createExpenseDto: CreateExpenseDto, userId: string): Promise<Expense> {
     const expense = new this.expenseModel({
@@ -21,7 +21,7 @@ export class ExpensesService {
   async findAll(
     page: number = 1,
     limit: number = 10,
-    carId?: string,
+    period?: string,
   ): Promise<{
     data: Expense[];
     total: number;
@@ -30,17 +30,47 @@ export class ExpensesService {
     totalPages: number;
   }> {
     const query: any = {};
-    
-    if (carId) {
-      query.carId = new Types.ObjectId(carId);
+    const now = new Date();
+    let startDate: Date | undefined;
+    let endDate: Date = now;
+
+    if (period) {
+      switch (period) {
+        case 'today':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          break;
+        case 'week':
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+          break;
+        case 'month':
+          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+          break;
+        case 'year':
+          startDate = new Date(now.getFullYear(), 0, 1);
+          break;
+        default:
+          // If period is not a recognized keyword, it might be a carId.
+          // However, the frontend is sending 'today', 'week', etc. as 'period'.
+          // If a carId is needed, it should be a separate parameter.
+          // For now, we'll just log a warning for unrecognized periods.
+          console.warn(`Unrecognized period provided: ${period}`);
+          break;
+      }
+
+      if (startDate) {
+        query.date = {
+          $gte: startDate,
+          $lte: endDate,
+        };
+      }
     }
 
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
       this.expenseModel
         .find(query)
-        .populate('carId', 'plateNumber model')
-        .populate('createdBy', 'name email')
+        .populate('carId', 'plateNumber model year')
+        .populate('createdBy', 'name email role')
         .sort({ date: -1 })
         .skip(skip)
         .limit(limit)
