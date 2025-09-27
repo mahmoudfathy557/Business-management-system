@@ -1,8 +1,0 @@
-[submodule "backend"]
-	path = backend
-	url = https://github.com/mahmoudfathy557/Business-management-system.git
-	branch = master
-[submodule "frontend"]
-	path = frontend
-	url = https://github.com/mahmoudfathy557/Business-management-system.git
-	branch = master
