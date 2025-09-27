@@ -40,7 +40,9 @@ export class ExpensesService {
           startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
           break;
         case 'week':
-          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+          // Get the start of the current week (Sunday)
+          const dayOfWeek = now.getDay();
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
           break;
         case 'month':
           startDate = new Date(now.getFullYear(), now.getMonth(), 1);
