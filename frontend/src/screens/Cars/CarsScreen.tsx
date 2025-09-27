@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl, Alert } from 'react-native';
-import { Text, Card, Title, Searchbar, FAB, Button } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { AppDispatch, RootState } from '../redux/store';
-import { fetchCars, deleteCar } from '../redux/slices';
-import CarCard from '../components/CarCard';
-import { Car } from '../types';
+import { AppDispatch, RootState } from '../../redux/store';
+import { fetchCars, deleteCar } from '../../redux/slices';
+import CarCard from '../../components/Cars/CarCard';
+import { CarsHeader, CarsEmptyState } from '../../components/Cars';
+import { Car } from '../../types';
 
 const CarsScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -61,50 +62,17 @@ const CarsScreen: React.FC = () => {
     );
 
     const renderHeader = () => (
-        <View style={styles.header}>
-            <Searchbar
-                placeholder="Search cars..."
-                onChangeText={setSearchQuery}
-                value={searchQuery}
-                style={styles.searchbar}
-            />
-
-            <View style={styles.statsContainer}>
-                <Card style={styles.statsCard}>
-                    <Card.Content style={styles.statsContent}>
-                        <Text style={styles.statsValue}>{cars.length}</Text>
-                        <Text style={styles.statsLabel}>Total Cars</Text>
-                    </Card.Content>
-                </Card>
-
-                <Card style={styles.statsCard}>
-                    <Card.Content style={styles.statsContent}>
-                        <Text style={styles.statsValue}>
-                            {cars.filter(car => car.driver).length}
-                        </Text>
-                        <Text style={styles.statsLabel}>Assigned</Text>
-                    </Card.Content>
-                </Card>
-
-                <Card style={styles.statsCard}>
-                    <Card.Content style={styles.statsContent}>
-                        <Text style={styles.statsValue}>
-                            {cars.filter(car => !car.driver).length}
-                        </Text>
-                        <Text style={styles.statsLabel}>Unassigned</Text>
-                    </Card.Content>
-                </Card>
-            </View>
-        </View>
+        <CarsHeader
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            totalCars={cars.length}
+            assignedCars={cars.filter(car => car.driver).length}
+            unassignedCars={cars.filter(car => !car.driver).length}
+        />
     );
 
     const renderEmpty = () => (
-        <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No cars found</Text>
-            <Text style={styles.emptySubtext}>
-                {searchQuery ? 'Try adjusting your search terms' : 'Add your first car to get started'}
-            </Text>
-        </View>
+        <CarsEmptyState hasSearchQuery={!!searchQuery} />
     );
 
     return (
@@ -139,53 +107,6 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         paddingBottom: 80,
-    },
-    header: {
-        padding: 16,
-        backgroundColor: 'white',
-        elevation: 2,
-    },
-    searchbar: {
-        marginBottom: 16,
-    },
-    statsContainer: {
-        flexDirection: 'row',
-        gap: 8,
-    },
-    statsCard: {
-        flex: 1,
-        elevation: 1,
-    },
-    statsContent: {
-        alignItems: 'center',
-        paddingVertical: 12,
-    },
-    statsValue: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    statsLabel: {
-        fontSize: 12,
-        color: '#666',
-        marginTop: 4,
-    },
-    emptyContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 40,
-    },
-    emptyText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#666',
-        marginBottom: 8,
-    },
-    emptySubtext: {
-        fontSize: 14,
-        color: '#999',
-        textAlign: 'center',
     },
     fab: {
         position: 'absolute',

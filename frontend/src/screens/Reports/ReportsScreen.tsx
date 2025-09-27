@@ -3,8 +3,8 @@ import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Text, Card, Title, SegmentedButtons, Button, DataTable } from 'react-native-paper';
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import apiService from '../services/api';
+import { RootState } from '../../redux/store';
+import apiService from '../../services/api';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -164,8 +164,10 @@ const ReportsScreen: React.FC = () => {
                                 <DataTable.Cell>{row.period}</DataTable.Cell>
                                 <DataTable.Cell numeric>${row.sales}</DataTable.Cell>
                                 <DataTable.Cell numeric>${row.expenses}</DataTable.Cell>
-                                <DataTable.Cell numeric style={{ color: row.profit >= 0 ? '#4caf50' : '#f44336' }}>
-                                    ${row.profit}
+                                <DataTable.Cell numeric>
+                                    <Text style={{ color: row.profit >= 0 ? '#4caf50' : '#f44336' }}>
+                                        ${row.profit}
+                                    </Text>
                                 </DataTable.Cell>
                             </DataTable.Row>
                         ))}

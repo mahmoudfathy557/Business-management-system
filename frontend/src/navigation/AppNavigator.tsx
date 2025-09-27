@@ -7,27 +7,28 @@ import { RootState } from '../redux/store';
 import { UserRole } from '../types';
 
 // Import screens
-import LoginScreen from '../screens/LoginScreen';
-import DashboardScreen from '../screens/DashboardScreen';
-import InventoryScreen from '../screens/InventoryScreen';
-import CarsScreen from '../screens/CarsScreen';
-import FinanceScreen from '../screens/FinanceScreen';
-import ReportsScreen from '../screens/ReportsScreen';
-import UsersScreen from '../screens/UsersScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import ProductDetailsScreen from '../screens/ProductDetailsScreen';
-import CarDetailsScreen from '../screens/CarDetailsScreen';
-import AddProductScreen from '../screens/AddProductScreen';
-import EditProductScreen from '../screens/EditProductScreen';
-import AddCarScreen from '../screens/AddCarScreen';
-import EditCarScreen from '../screens/EditCarScreen';
-import AddExpenseScreen from '../screens/AddExpenseScreen';
-import EditExpenseScreen from '../screens/EditExpenseScreen';
-import AddUserScreen from '../screens/AddUserScreen';
-import EditUserScreen from '../screens/EditUserScreen';
+import LoginScreen from '../screens/Login/LoginScreen';
+ 
+import CarsScreen from '../screens/Cars/CarsScreen';
+import FinanceScreen from '../screens/Finance/FinanceScreen';
+import ReportsScreen from '../screens/Reports/ReportsScreen';
+import UsersScreen from '../screens/Users/UsersScreen';
+import SettingsScreen from '../screens/Settings/SettingsScreen';
+import ProductDetailsScreen from '../screens/Inventory/ProductDetailsScreen';
+import CarDetailsScreen from '../screens/Cars/CarDetailsScreen';
+import AddProductScreen from '../screens/Inventory/AddProductScreen';
+import EditProductScreen from '../screens/Inventory/EditProductScreen';
+import AddCarScreen from '../screens/Cars/AddCarScreen';
+import EditCarScreen from '../screens/Cars/EditCarScreen';
+import AddExpenseScreen from '../screens/Finance/AddExpenseScreen';
+import EditExpenseScreen from '../screens/Finance/EditExpenseScreen';
+import AddUserScreen from '../screens/Login/AddUserScreen';
+import EditUserScreen from '../screens/Login/EditUserScreen';
 
 // Import icons
 import { MaterialIcons } from '@expo/vector-icons';
+import DashboardScreen from '../screens/Dashboard/DashboardScreen';
+import InventoryScreen from '../screens/Inventory/InventoryScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

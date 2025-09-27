@@ -1,33 +1,40 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Title, Paragraph, Chip, IconButton } from 'react-native-paper';
-import { Car } from '../types';
+import { Product } from '../../types';
 
-interface CarCardProps {
-    car: Car;
+interface ProductCardProps {
+    product: Product;
     onPress: () => void;
     onEdit?: () => void;
     onDelete?: () => void;
     showActions?: boolean;
 }
 
-const CarCard: React.FC<CarCardProps> = ({
-    car,
+const ProductCard: React.FC<ProductCardProps> = ({
+    product,
     onPress,
     onEdit,
     onDelete,
     showActions = false,
 }) => {
-    const assignedProductsCount = car.assignedProducts?.length || 0;
+    const isLowStock = product.stockQuantity <= product.minStockLevel;
 
     return (
         <Card style={styles.card} onPress={onPress}>
             <Card.Content>
                 <View style={styles.header}>
                     <View style={styles.titleContainer}>
-                        <Title style={styles.title}>{car.plateNumber}</Title>
-                        <Chip mode="outlined" style={styles.yearChip}>
-                            {car.year}
+                        <Title style={styles.title}>{product.name}</Title>
+                        <Chip
+                            mode="outlined"
+                            style={[
+                                styles.categoryChip,
+                                { backgroundColor: isLowStock ? '#ffebee' : '#e8f5e8' }
+                            ]}
+                            textStyle={{ color: isLowStock ? '#c62828' : '#2e7d32' }}
+                        >
+                            {product.category}
                         </Chip>
                     </View>
                     {showActions && (
@@ -50,25 +57,32 @@ const CarCard: React.FC<CarCardProps> = ({
                     )}
                 </View>
 
-                <Paragraph style={styles.model}>{car.model}</Paragraph>
+                <Paragraph style={styles.description} numberOfLines={2}>
+                    {product.description}
+                </Paragraph>
 
                 <View style={styles.details}>
-                    <View style={styles.driverContainer}>
-                        <Paragraph style={styles.driverLabel}>Driver:</Paragraph>
-                        <Paragraph style={styles.driverName}>
-                            {car.driver?.name || 'Unassigned'}
-                        </Paragraph>
+                    <View style={styles.priceContainer}>
+                        <Paragraph style={styles.price}>${product.price.toFixed(2)}</Paragraph>
+                        <Paragraph style={styles.cost}>Cost: ${product.cost.toFixed(2)}</Paragraph>
                     </View>
 
-                    <View style={styles.productsContainer}>
-                        <Paragraph style={styles.productsLabel}>Products:</Paragraph>
-                        <Chip
-                            mode="outlined"
-                            style={styles.productsChip}
-                            textStyle={styles.productsText}
-                        >
-                            {assignedProductsCount}
-                        </Chip>
+                    <View style={styles.stockContainer}>
+                        <Paragraph style={[
+                            styles.stock,
+                            { color: isLowStock ? '#c62828' : '#2e7d32' }
+                        ]}>
+                            Stock: {product.stockQuantity}
+                        </Paragraph>
+                        {isLowStock && (
+                            <Chip
+                                mode="outlined"
+                                style={styles.lowStockChip}
+                                textStyle={styles.lowStockText}
+                            >
+                                Low Stock
+                            </Chip>
+                        )}
                     </View>
                 </View>
             </Card.Content>
@@ -90,21 +104,19 @@ const styles = StyleSheet.create({
     },
     titleContainer: {
         flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
     },
     title: {
         fontSize: 16,
         fontWeight: 'bold',
-        marginRight: 8,
+        marginBottom: 4,
     },
-    yearChip: {
-        backgroundColor: '#e3f2fd',
+    categoryChip: {
+        alignSelf: 'flex-start',
     },
     actions: {
         flexDirection: 'row',
     },
-    model: {
+    description: {
         fontSize: 14,
         color: '#666',
         marginBottom: 12,
@@ -114,33 +126,33 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    driverContainer: {
+    priceContainer: {
         flex: 1,
     },
-    driverLabel: {
+    price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#2e7d32',
+    },
+    cost: {
         fontSize: 12,
         color: '#666',
     },
-    driverName: {
-        fontSize: 14,
-        fontWeight: '500',
-        color: '#2e7d32',
-    },
-    productsContainer: {
+    stockContainer: {
         alignItems: 'flex-end',
     },
-    productsLabel: {
-        fontSize: 12,
-        color: '#666',
-        marginBottom: 4,
+    stock: {
+        fontSize: 14,
+        fontWeight: '500',
     },
-    productsChip: {
-        backgroundColor: '#e8f5e8',
+    lowStockChip: {
+        backgroundColor: '#ffebee',
+        marginTop: 4,
     },
-    productsText: {
-        color: '#2e7d32',
-        fontSize: 12,
+    lowStockText: {
+        color: '#c62828',
+        fontSize: 10,
     },
 });
 
-export default CarCard;
+export default ProductCard;

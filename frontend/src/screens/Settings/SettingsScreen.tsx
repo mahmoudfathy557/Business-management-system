@@ -2,8 +2,8 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Card, Title, Button, Switch, List } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
-import { logoutUser } from '../redux/slices';
+import { AppDispatch, RootState } from '../../redux/store';
+import { logoutUser } from '../../redux/slices';
 
 const SettingsScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
