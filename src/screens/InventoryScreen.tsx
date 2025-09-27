@@ -92,7 +92,7 @@ const InventoryScreen: React.FC = () => {
                 <Card style={styles.statsCard}>
                     <Card.Content style={styles.statsContent}>
                         <Text style={styles.statsValue}>
-                            {products.filter(p => p.stockQuantity <= p.minStockLevel).length}
+                            {products.length > 0 ? products.filter(p => p.stockQuantity <= p.minStockLevel).length : 0}
                         </Text>
                         <Text style={styles.statsLabel}>Low Stock</Text>
                     </Card.Content>

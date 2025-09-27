@@ -1,14 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiService from '../services/api';
-import { 
-  User, 
-  AuthState, 
-  LoginCredentials, 
-  RegisterData, 
-  Product, 
-  Car, 
-  Expense, 
+import {
+  User,
+  AuthState,
+  LoginCredentials,
+  RegisterData,
+  Product,
+  Car,
+  Expense,
   DailyRecord,
   DashboardSummary,
   UserRole
@@ -20,9 +20,9 @@ export const loginUser = createAsyncThunk(
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
       const response = await apiService.login(credentials);
-      await AsyncStorage.setItem('authToken', response.data.token);
-      await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
-      return response.data;
+      await AsyncStorage.setItem('authToken', response.token);
+      await AsyncStorage.setItem('user', JSON.stringify(response.user));
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
     }
@@ -34,9 +34,9 @@ export const registerUser = createAsyncThunk(
   async (data: RegisterData, { rejectWithValue }) => {
     try {
       const response = await apiService.register(data);
-      await AsyncStorage.setItem('authToken', response.data.token);
-      await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
-      return response.data;
+      await AsyncStorage.setItem('authToken', response.token);
+      await AsyncStorage.setItem('user', JSON.stringify(response.user));
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Registration failed');
     }
@@ -49,7 +49,7 @@ export const loadUserFromStorage = createAsyncThunk(
     try {
       const token = await AsyncStorage.getItem('authToken');
       const userStr = await AsyncStorage.getItem('user');
-      
+
       if (token && userStr) {
         const user = JSON.parse(userStr);
         return { user, token };
@@ -90,6 +90,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        console.log("🚀 ~ action:", action)
         state.isLoading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
@@ -186,11 +187,12 @@ const productsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
+        console.log("🚀 ~ action:", action)
         state.isLoading = false;
-        state.products = action.payload.data;
-        state.total = action.payload.total;
-        state.page = action.payload.page;
-        state.limit = action.payload.limit;
+        state.products = action.payload.data || [];
+        state.total = action.payload.total || 0;
+        state.page = action.payload.page || 1;
+        state.limit = action.payload.limit || 10;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.isLoading = false;

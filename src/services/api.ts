@@ -1,12 +1,12 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { 
-  User, 
-  LoginCredentials, 
-  RegisterData, 
-  Product, 
-  Car, 
-  Expense, 
+import {
+  User,
+  LoginCredentials,
+  RegisterData,
+  Product,
+  Car,
+  Expense,
   DailyRecord,
   DashboardSummary,
   ApiResponse,
@@ -19,7 +19,7 @@ import {
 
 class ApiService {
   private api: AxiosInstance;
-  private baseURL: string = 'http://localhost:3000/api'; // Change this to your backend URL
+  private baseURL: string = 'http://192.168.1.8:3000/api'; // Your local network IP address
 
   constructor() {
     this.api = axios.create({
@@ -64,14 +64,14 @@ class ApiService {
   }
 
   // Authentication APIs
-  async login(credentials: LoginCredentials): Promise<ApiResponse<{ user: User; token: string }>> {
-    const response: AxiosResponse<ApiResponse<{ user: User; token: string }>> = 
+  async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
+    const response: AxiosResponse<{ user: User; token: string }> =
       await this.api.post('/auth/login', credentials);
     return response.data;
   }
 
-  async register(data: RegisterData): Promise<ApiResponse<{ user: User; token: string }>> {
-    const response: AxiosResponse<ApiResponse<{ user: User; token: string }>> = 
+  async register(data: RegisterData): Promise<{ user: User; token: string }> {
+    const response: AxiosResponse<{ user: User; token: string }> =
       await this.api.post('/auth/register', data);
     return response.data;
   }
@@ -84,7 +84,7 @@ class ApiService {
   // Product APIs
   async getProducts(page: number = 1, limit: number = 10, search?: string): Promise<PaginatedResponse<Product>> {
     const params = { page, limit, ...(search && { search }) };
-    const response: AxiosResponse<PaginatedResponse<Product>> = 
+    const response: AxiosResponse<PaginatedResponse<Product>> =
       await this.api.get('/products', { params });
     return response.data;
   }
@@ -95,13 +95,13 @@ class ApiService {
   }
 
   async createProduct(data: ProductFormData): Promise<ApiResponse<Product>> {
-    const response: AxiosResponse<ApiResponse<Product>> = 
+    const response: AxiosResponse<ApiResponse<Product>> =
       await this.api.post('/products', data);
     return response.data;
   }
 
   async updateProduct(id: string, data: Partial<ProductFormData>): Promise<ApiResponse<Product>> {
-    const response: AxiosResponse<ApiResponse<Product>> = 
+    const response: AxiosResponse<ApiResponse<Product>> =
       await this.api.put(`/products/${id}`, data);
     return response.data;
   }
@@ -112,13 +112,13 @@ class ApiService {
   }
 
   async updateStock(productId: string, quantity: number, type: 'in' | 'out', reason: string): Promise<ApiResponse<Product>> {
-    const response: AxiosResponse<ApiResponse<Product>> = 
+    const response: AxiosResponse<ApiResponse<Product>> =
       await this.api.post(`/products/${productId}/stock`, { quantity, type, reason });
     return response.data;
   }
 
   async getStockMovements(productId: string): Promise<ApiResponse<StockMovement[]>> {
-    const response: AxiosResponse<ApiResponse<StockMovement[]>> = 
+    const response: AxiosResponse<ApiResponse<StockMovement[]>> =
       await this.api.get(`/products/${productId}/stock-movements`);
     return response.data;
   }
@@ -150,27 +150,27 @@ class ApiService {
   }
 
   async assignProductToCar(carId: string, productId: string, quantity: number): Promise<ApiResponse<void>> {
-    const response: AxiosResponse<ApiResponse<void>> = 
+    const response: AxiosResponse<ApiResponse<void>> =
       await this.api.post(`/cars/${carId}/products`, { productId, quantity });
     return response.data;
   }
 
   async removeProductFromCar(carId: string, productId: string): Promise<ApiResponse<void>> {
-    const response: AxiosResponse<ApiResponse<void>> = 
+    const response: AxiosResponse<ApiResponse<void>> =
       await this.api.delete(`/cars/${carId}/products/${productId}`);
     return response.data;
   }
 
   // Daily Records APIs
   async createDailyRecord(data: { carId: string; income: number; expenses: number; notes?: string }): Promise<ApiResponse<DailyRecord>> {
-    const response: AxiosResponse<ApiResponse<DailyRecord>> = 
+    const response: AxiosResponse<ApiResponse<DailyRecord>> =
       await this.api.post('/daily-records', data);
     return response.data;
   }
 
   async getDailyRecords(carId?: string, startDate?: string, endDate?: string): Promise<ApiResponse<DailyRecord[]>> {
     const params = { ...(carId && { carId }), ...(startDate && { startDate }), ...(endDate && { endDate }) };
-    const response: AxiosResponse<ApiResponse<DailyRecord[]>> = 
+    const response: AxiosResponse<ApiResponse<DailyRecord[]>> =
       await this.api.get('/daily-records', { params });
     return response.data;
   }
@@ -178,7 +178,7 @@ class ApiService {
   // Expense APIs
   async getExpenses(page: number = 1, limit: number = 10, carId?: string): Promise<PaginatedResponse<Expense>> {
     const params = { page, limit, ...(carId && { carId }) };
-    const response: AxiosResponse<PaginatedResponse<Expense>> = 
+    const response: AxiosResponse<PaginatedResponse<Expense>> =
       await this.api.get('/expenses', { params });
     return response.data;
   }
@@ -189,7 +189,7 @@ class ApiService {
   }
 
   async updateExpense(id: string, data: Partial<ExpenseFormData>): Promise<ApiResponse<Expense>> {
-    const response: AxiosResponse<ApiResponse<Expense>> = 
+    const response: AxiosResponse<ApiResponse<Expense>> =
       await this.api.put(`/expenses/${id}`, data);
     return response.data;
   }
@@ -201,7 +201,7 @@ class ApiService {
 
   // Dashboard APIs
   async getDashboardSummary(): Promise<ApiResponse<DashboardSummary>> {
-    const response: AxiosResponse<ApiResponse<DashboardSummary>> = 
+    const response: AxiosResponse<ApiResponse<DashboardSummary>> =
       await this.api.get('/dashboard/summary');
     return response.data;
   }
@@ -230,21 +230,21 @@ class ApiService {
   // Reports APIs
   async getSalesReport(startDate: string, endDate: string, carId?: string): Promise<ApiResponse<any>> {
     const params = { startDate, endDate, ...(carId && { carId }) };
-    const response: AxiosResponse<ApiResponse<any>> = 
+    const response: AxiosResponse<ApiResponse<any>> =
       await this.api.get('/reports/sales', { params });
     return response.data;
   }
 
   async getExpenseReport(startDate: string, endDate: string, carId?: string): Promise<ApiResponse<any>> {
     const params = { startDate, endDate, ...(carId && { carId }) };
-    const response: AxiosResponse<ApiResponse<any>> = 
+    const response: AxiosResponse<ApiResponse<any>> =
       await this.api.get('/reports/expenses', { params });
     return response.data;
   }
 
   async getProfitReport(startDate: string, endDate: string, carId?: string): Promise<ApiResponse<any>> {
     const params = { startDate, endDate, ...(carId && { carId }) };
-    const response: AxiosResponse<ApiResponse<any>> = 
+    const response: AxiosResponse<ApiResponse<any>> =
       await this.api.get('/reports/profit', { params });
     return response.data;
   }

@@ -9,6 +9,7 @@ export interface User {
 }
 
 export enum UserRole {
+  SUPER_ADMIN = 'super_admin',
   ADMIN = 'admin',
   INVENTORY_MANAGER = 'inventory_manager',
   DRIVER = 'driver'
