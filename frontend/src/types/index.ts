@@ -104,9 +104,8 @@ export interface Expense {
   type: ExpenseType;
   amount: number;
   description: string;
-  carId?: string;
-  car?: {
-    id: string;
+  carId?: {
+    _id: string;
     plateNumber: string;
     model: string;
     year: number;

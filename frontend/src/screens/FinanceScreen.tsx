@@ -15,11 +15,11 @@ const FinanceScreen: React.FC = () => {
 
     const [refreshing, setRefreshing] = useState(false);
     const [selectedPeriod, setSelectedPeriod] = useState('today');
-
+ 
     const { expenses, totalExpenses, expensesByType, isLoading, error } = useSelector(
         (state: RootState) => state.expenses
     );
-
+ 
     useEffect(() => {
         dispatch(fetchExpenses({ period: selectedPeriod }));
     }, [selectedPeriod, dispatch]);
@@ -154,7 +154,7 @@ const FinanceScreen: React.FC = () => {
                                 <ExpenseForm
                                     key={expense.id}
                                     expense={expense}
-                                    onPress={() => navigation.navigate('EditExpense' as never, { expenseId: expense.id } as never)}
+                                    onPress={() => (navigation as any).navigate('EditExpense' as never, { expenseId: expense.id } as never)}
                                 />
                             ))
                         )}
