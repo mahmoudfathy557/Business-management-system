@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authSlice, productsSlice, carsSlice, dashboardSlice, expensesSlice } from './slices';
+import { usersSlice } from './slices/usersSlice';
 
 export const store = configureStore({
   reducer: {
@@ -8,6 +9,7 @@ export const store = configureStore({
     cars: carsSlice.reducer,
     dashboard: dashboardSlice.reducer,
     expenses: expensesSlice.reducer,
+    users: usersSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
