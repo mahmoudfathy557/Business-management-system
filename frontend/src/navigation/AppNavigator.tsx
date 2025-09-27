@@ -1,0 +1,208 @@
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { UserRole } from '../types';
+
+// Import screens
+import LoginScreen from '../screens/LoginScreen';
+import DashboardScreen from '../screens/DashboardScreen';
+import InventoryScreen from '../screens/InventoryScreen';
+import CarsScreen from '../screens/CarsScreen';
+import FinanceScreen from '../screens/FinanceScreen';
+import ReportsScreen from '../screens/ReportsScreen';
+import UsersScreen from '../screens/UsersScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import ProductDetailsScreen from '../screens/ProductDetailsScreen';
+import CarDetailsScreen from '../screens/CarDetailsScreen';
+import AddProductScreen from '../screens/AddProductScreen';
+import EditProductScreen from '../screens/EditProductScreen';
+import AddCarScreen from '../screens/AddCarScreen';
+import EditCarScreen from '../screens/EditCarScreen';
+import AddExpenseScreen from '../screens/AddExpenseScreen';
+import EditExpenseScreen from '../screens/EditExpenseScreen';
+import AddUserScreen from '../screens/AddUserScreen';
+import EditUserScreen from '../screens/EditUserScreen';
+
+// Import icons
+import { MaterialIcons } from '@expo/vector-icons';
+
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+// Tab Navigator for authenticated users
+const TabNavigator = () => {
+    const user = useSelector((state: RootState) => state.auth.user);
+
+    const getTabScreens = () => {
+        const screens = [
+            {
+                name: 'Dashboard',
+                component: DashboardScreen,
+                icon: 'dashboard',
+                label: 'Dashboard',
+            },
+        ];
+
+        // Add role-based screens
+        if (user?.role === UserRole.ADMIN || user?.role === UserRole.INVENTORY_MANAGER) {
+            screens.push({
+                name: 'Inventory',
+                component: InventoryScreen,
+                icon: 'inventory',
+                label: 'Inventory',
+            });
+        }
+
+        if (user?.role === UserRole.ADMIN || user?.role === UserRole.DRIVER) {
+            screens.push({
+                name: 'Cars',
+                component: CarsScreen,
+                icon: 'directions-car',
+                label: 'Cars',
+            });
+        }
+
+        if (user?.role === UserRole.ADMIN) {
+            screens.push(
+                {
+                    name: 'Finance',
+                    component: FinanceScreen,
+                    icon: 'account-balance',
+                    label: 'Finance',
+                },
+                {
+                    name: 'Reports',
+                    component: ReportsScreen,
+                    icon: 'assessment',
+                    label: 'Reports',
+                },
+                {
+                    name: 'Users',
+                    component: UsersScreen,
+                    icon: 'people',
+                    label: 'Users',
+                }
+            );
+        }
+
+        screens.push({
+            name: 'Settings',
+            component: SettingsScreen,
+            icon: 'settings',
+            label: 'Settings',
+        });
+
+        return screens;
+    };
+
+    return (
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    const screen = getTabScreens().find(s => s.name === route.name);
+                    return (
+                        <MaterialIcons
+                            name={screen?.icon as any}
+                            size={size}
+                            color={color}
+                        />
+                    );
+                },
+                tabBarActiveTintColor: '#6200ea',
+                tabBarInactiveTintColor: 'gray',
+                headerShown: false,
+            })}
+        >
+            {getTabScreens().map((screen) => (
+                <Tab.Screen
+                    key={screen.name}
+                    name={screen.name}
+                    component={screen.component}
+                    options={{ title: screen.label }}
+                />
+            ))}
+        </Tab.Navigator>
+    );
+};
+
+// Main Stack Navigator
+const AppNavigator = () => {
+    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
+    return (
+        <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+                {!isAuthenticated ? (
+                    <Stack.Screen name="Login" component={LoginScreen} />
+                ) : (
+                    <>
+                        <Stack.Screen name="MainTabs" component={TabNavigator} />
+
+                        {/* Product Screens */}
+                        <Stack.Screen
+                            name="ProductDetails"
+                            component={ProductDetailsScreen}
+                            options={{ title: 'Product Details' }}
+                        />
+                        <Stack.Screen
+                            name="AddProduct"
+                            component={AddProductScreen}
+                            options={{ title: 'Add Product' }}
+                        />
+                        <Stack.Screen
+                            name="EditProduct"
+                            component={EditProductScreen}
+                            options={{ title: 'Edit Product' }}
+                        />
+
+                        {/* Car Screens */}
+                        <Stack.Screen
+                            name="CarDetails"
+                            component={CarDetailsScreen}
+                            options={{ title: 'Car Details' }}
+                        />
+                        <Stack.Screen
+                            name="AddCar"
+                            component={AddCarScreen}
+                            options={{ title: 'Add Car' }}
+                        />
+                        <Stack.Screen
+                            name="EditCar"
+                            component={EditCarScreen}
+                            options={{ title: 'Edit Car' }}
+                        />
+
+                        {/* Expense Screens */}
+                        <Stack.Screen
+                            name="AddExpense"
+                            component={AddExpenseScreen}
+                            options={{ title: 'Add Expense' }}
+                        />
+                        <Stack.Screen
+                            name="EditExpense"
+                            component={EditExpenseScreen}
+                            options={{ title: 'Edit Expense' }}
+                        />
+
+                        {/* User Screens */}
+                        <Stack.Screen
+                            name="AddUser"
+                            component={AddUserScreen}
+                            options={{ title: 'Add User' }}
+                        />
+                        <Stack.Screen
+                            name="EditUser"
+                            component={EditUserScreen}
+                            options={{ title: 'Edit User' }}
+                        />
+                    </>
+                )}
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+};
+
+export default AppNavigator;
