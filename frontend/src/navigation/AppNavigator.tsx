@@ -145,58 +145,158 @@ const AppNavigator = () => {
                         <Stack.Screen
                             name="ProductDetails"
                             component={ProductDetailsScreen}
-                            options={{ title: 'Product Details' }}
+                            options={{ 
+                                title: 'Product Details',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
                         <Stack.Screen
                             name="AddProduct"
                             component={AddProductScreen}
-                            options={{ title: 'Add Product' }}
+                            options={{ 
+                                title: 'Add Product',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
                         <Stack.Screen
                             name="EditProduct"
                             component={EditProductScreen}
-                            options={{ title: 'Edit Product' }}
+                            options={{ 
+                                title: 'Edit Product',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
 
                         {/* Car Screens */}
                         <Stack.Screen
                             name="CarDetails"
                             component={CarDetailsScreen}
-                            options={{ title: 'Car Details' }}
+                            options={{ 
+                                title: 'Car Details',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
                         <Stack.Screen
                             name="AddCar"
                             component={AddCarScreen}
-                            options={{ title: 'Add Car' }}
+                            options={{ 
+                                title: 'Add Car',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
                         <Stack.Screen
                             name="EditCar"
                             component={EditCarScreen}
-                            options={{ title: 'Edit Car' }}
+                            options={{ 
+                                title: 'Edit Car',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
 
                         {/* Expense Screens */}
                         <Stack.Screen
                             name="AddExpense"
                             component={AddExpenseScreen}
-                            options={{ title: 'Add Expense' }}
+                            options={{ 
+                                title: 'Add Expense',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
                         <Stack.Screen
                             name="EditExpense"
                             component={EditExpenseScreen}
-                            options={{ title: 'Edit Expense' }}
+                            options={{ 
+                                title: 'Edit Expense',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
 
                         {/* User Screens */}
                         <Stack.Screen
                             name="AddUser"
                             component={AddUserScreen}
-                            options={{ title: 'Add User' }}
+                            options={{ 
+                                title: 'Add User',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
                         <Stack.Screen
                             name="EditUser"
                             component={EditUserScreen}
-                            options={{ title: 'Edit User' }}
+                            options={{ 
+                                title: 'Edit User',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
                         />
                     </>
                 )}
