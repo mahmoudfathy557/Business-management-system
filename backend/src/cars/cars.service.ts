@@ -1,22 +1,31 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Car, CarDocument } from './schemas/car.schema';
-import { CreateCarDto, UpdateCarDto, AssignProductDto, DailyRecordDto } from './dto/car.dto';
+import {
+  CreateCarDto,
+  UpdateCarDto,
+  AssignProductDto,
+  DailyRecordDto,
+} from './dto/car.dto';
 
 @Injectable()
 export class CarsService {
-  constructor(
-    @InjectModel(Car.name) private carModel: Model<CarDocument>,
-  ) {}
+  constructor(@InjectModel(Car.name) private carModel: Model<CarDocument>) {}
 
   async create(createCarDto: CreateCarDto): Promise<Car> {
-    const existingCar = await this.carModel.findOne({ 
-      plateNumber: createCarDto.plateNumber 
+    const existingCar = await this.carModel.findOne({
+      plateNumber: createCarDto.plateNumber,
     });
-    
+
     if (existingCar) {
-      throw new BadRequestException('Car with this plate number already exists');
+      throw new BadRequestException(
+        'Car with this plate number already exists',
+      );
     }
 
     const car = new this.carModel(createCarDto);
@@ -60,23 +69,25 @@ export class CarsService {
   }
 
   async remove(id: string): Promise<void> {
-    const result = await this.carModel.findByIdAndUpdate(
-      id,
-      { isActive: false },
-      { new: true }
-    ).exec();
+    const result = await this.carModel
+      .findByIdAndUpdate(id, { isActive: false }, { new: true })
+      .exec();
 
     if (!result) {
       throw new NotFoundException('Car not found');
     }
   }
 
-  async assignProduct(carId: string, assignProductDto: AssignProductDto): Promise<Car> {
+  async assignProduct(
+    carId: string,
+    assignProductDto: AssignProductDto,
+  ): Promise<Car> {
     const car = await this.findOne(carId);
-    
+
     // Check if product is already assigned
     const existingAssignment = car.assignedProducts.find(
-      assignment => assignment.productId.toString() === assignProductDto.productId
+      (assignment) =>
+        assignment.productId.toString() === assignProductDto.productId,
     );
 
     if (existingAssignment) {
@@ -94,23 +105,23 @@ export class CarsService {
 
   async removeProduct(carId: string, productId: string): Promise<Car> {
     const car = await this.findOne(carId);
-    
+
     car.assignedProducts = car.assignedProducts.filter(
-      assignment => assignment.productId.toString() !== productId
+      (assignment) => assignment.productId.toString() !== productId,
     );
 
     return (car as any).save();
   }
 
   async updateProductQuantity(
-    carId: string, 
-    productId: string, 
-    quantity: number
+    carId: string,
+    productId: string,
+    quantity: number,
   ): Promise<Car> {
     const car = await this.findOne(carId);
-    
+
     const assignment = car.assignedProducts.find(
-      assignment => assignment.productId.toString() === productId
+      (assignment) => assignment.productId.toString() === productId,
     );
 
     if (!assignment) {
@@ -139,17 +150,21 @@ export class CarsService {
   }
 
   async getAssignedCarsCount(): Promise<number> {
-    return this.carModel.countDocuments({ 
-      driverId: { $exists: true }, 
-      isActive: true 
-    }).exec();
+    return this.carModel
+      .countDocuments({
+        driverId: { $exists: true },
+        isActive: true,
+      })
+      .exec();
   }
 
   async getUnassignedCarsCount(): Promise<number> {
-    return this.carModel.countDocuments({ 
-      driverId: { $exists: false }, 
-      isActive: true 
-    }).exec();
+    return this.carModel
+      .countDocuments({
+        driverId: { $exists: false },
+        isActive: true,
+      })
+      .exec();
   }
 
   async createDailyRecord(dailyRecordDto: DailyRecordDto): Promise<any> {

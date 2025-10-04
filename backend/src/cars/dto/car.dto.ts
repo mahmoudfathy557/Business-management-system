@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateCarDto {
   @IsString()
@@ -15,6 +23,7 @@ export class CreateCarDto {
   year: number;
 
   @IsOptional()
+  @IsMongoId()
   driverId?: string;
 }
 
@@ -34,6 +43,7 @@ export class UpdateCarDto {
   year?: number;
 
   @IsOptional()
+  @IsMongoId()
   driverId?: string;
 
   @IsOptional()
@@ -43,6 +53,7 @@ export class UpdateCarDto {
 export class AssignProductDto {
   @IsString()
   @IsNotEmpty()
+  @IsMongoId()
   productId: string;
 
   @IsNumber()
@@ -53,6 +64,7 @@ export class AssignProductDto {
 export class DailyRecordDto {
   @IsString()
   @IsNotEmpty()
+  @IsMongoId()
   carId: string;
 
   @IsNumber()

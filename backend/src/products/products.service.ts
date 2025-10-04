@@ -82,11 +82,6 @@ export class ProductsService {
     id: string,
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    console.log(
-      '🚀 ~ ProductsService ~ update ~ updateProductDto:',
-      updateProductDto,
-    );
-    console.log('🚀 ~ ProductsService ~ update ~ id:', id);
     const product = await this.productModel
       .findByIdAndUpdate(id, updateProductDto, { new: true })
       .exec();

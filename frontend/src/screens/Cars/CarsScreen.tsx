@@ -81,8 +81,7 @@ const CarsScreen: React.FC = () => {
                 data={filteredCars}
                 renderItem={renderCar}
                 keyExtractor={(item) => {
-                    console.log("🚀 ~ item:", item)
-                    
+                     
                     return item._id}}
                 ListHeaderComponent={renderHeader}
                 ListEmptyComponent={renderEmpty}

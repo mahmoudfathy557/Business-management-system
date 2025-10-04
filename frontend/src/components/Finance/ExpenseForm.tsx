@@ -9,8 +9,7 @@ interface ExpenseFormProps {
 }
 
 const ExpenseForm: React.FC<ExpenseFormProps> = ({ expense, onPress }) => {
-    console.log("🚀 ~ ExpenseForm ~ expense:", expense)
-    const getExpenseTypeColor = (type: ExpenseType) => {
+     const getExpenseTypeColor = (type: ExpenseType) => {
         switch (type) {
             case ExpenseType.FUEL:
                 return '#ff9800';

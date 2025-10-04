@@ -24,8 +24,8 @@ export class Car {
   @Prop({ required: true, min: 1900, max: new Date().getFullYear() + 1 })
   year: number;
 
-  @Prop({ type: Types.ObjectId, ref: 'User' })
-  driverId?: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'User', default: null })
+  driverId?: Types.ObjectId | null;
 
   @Prop({ type: [CarProduct], default: [] })
   assignedProducts: CarProduct[];

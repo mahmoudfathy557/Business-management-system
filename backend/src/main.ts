@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { EmptyStringToNullPipe } from './common/pipes/empty-string-to-null.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,9 +14,9 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:19006', // Expo web
-      'http://localhost:8081',  // Expo dev server
+      'http://localhost:8081', // Expo dev server
       'exp://192.168.1.8:8081', // Expo Go on your network
-      'exp://localhost:8081',   // Expo Go local
+      'exp://localhost:8081', // Expo Go local
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -29,6 +30,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
     }),
+    new EmptyStringToNullPipe(),
   );
 
   // Global response interceptor
@@ -61,7 +63,10 @@ async function bootstrap() {
     .addTag('Dashboard', 'Dashboard data endpoints')
     .addTag('Reports', 'Reports endpoints')
     .addTag('Seed', 'Database seeding endpoints (Super Admin only)')
-    .addTag('Test', 'Test endpoints for data validation and relationship testing (Super Admin, Admin)')
+    .addTag(
+      'Test',
+      'Test endpoints for data validation and relationship testing (Super Admin, Admin)',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -76,6 +81,8 @@ async function bootstrap() {
 
   console.log(`🚀 Application is running on: http://localhost:${port}/api`);
   console.log(`🚀 Network access: http://192.168.1.8:${port}/api`);
-  console.log(`📚 Swagger documentation available at: http://localhost:${port}/api/docs`);
+  console.log(
+    `📚 Swagger documentation available at: http://localhost:${port}/api/docs`,
+  );
 }
 bootstrap();

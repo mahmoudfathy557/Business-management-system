@@ -1,4 +1,13 @@
-import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { ExpenseType } from '../schemas/expense.schema';
 
 export class CreateExpenseDto {
@@ -14,6 +23,7 @@ export class CreateExpenseDto {
   description: string;
 
   @IsOptional()
+  @IsMongoId()
   carId?: string;
 
   @IsDateString()
@@ -35,6 +45,7 @@ export class UpdateExpenseDto {
   description?: string;
 
   @IsOptional()
+  @IsMongoId()
   carId?: string;
 
   @IsOptional()
@@ -50,6 +61,7 @@ export class ExpenseReportDto {
   endDate: string;
 
   @IsOptional()
+  @IsMongoId()
   carId?: string;
 
   @IsOptional()

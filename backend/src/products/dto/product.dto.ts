@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Min } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Min,
+} from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
@@ -97,8 +105,10 @@ export class StockMovementDto {
   reason: string;
 
   @IsOptional()
+  @IsMongoId()
   carId?: string;
 
   @IsOptional()
+  @IsMongoId()
   driverId?: string;
 }

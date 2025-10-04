@@ -8,15 +8,30 @@ import {
   Delete,
   UseGuards,
   Query,
+  Put,
+  UsePipes,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+  ApiParam,
+} from '@nestjs/swagger';
 import { CarsService } from './cars.service';
-import { CreateCarDto, UpdateCarDto, AssignProductDto, DailyRecordDto } from './dto/car.dto';
+import {
+  CreateCarDto,
+  UpdateCarDto,
+  AssignProductDto,
+  DailyRecordDto,
+} from './dto/car.dto';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { EmptyStringToNullPipe } from 'src/common/pipes/empty-string-to-null.pipe';
 
 @ApiTags('Cars')
 @Controller('cars')
@@ -32,6 +47,7 @@ export class CarsController {
   @ApiResponse({ status: 201, description: 'Car created successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
+  @UsePipes(new EmptyStringToNullPipe())
   create(@Body() createCarDto: CreateCarDto) {
     return this.carsService.create(createCarDto);
   }
@@ -46,7 +62,10 @@ export class CarsController {
   @Get('unassigned')
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Get unassigned cars' })
-  @ApiResponse({ status: 200, description: 'Unassigned cars retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Unassigned cars retrieved successfully',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
   getUnassignedCars() {
     return this.carsService.getUnassignedCars();
@@ -56,8 +75,14 @@ export class CarsController {
   @Roles(UserRole.ADMIN, UserRole.DRIVER)
   @ApiOperation({ summary: 'Get cars by driver' })
   @ApiParam({ name: 'driverId', description: 'Driver ID' })
-  @ApiResponse({ status: 200, description: 'Cars by driver retrieved successfully' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Driver role required' })
+  @ApiResponse({
+    status: 200,
+    description: 'Cars by driver retrieved successfully',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Driver role required',
+  })
   getCarsByDriver(@Param('driverId') driverId: string) {
     return this.carsService.getCarsByDriver(driverId);
   }
@@ -65,7 +90,10 @@ export class CarsController {
   @Get('stats')
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Get car statistics' })
-  @ApiResponse({ status: 200, description: 'Car statistics retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Car statistics retrieved successfully',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
   getStats() {
     return Promise.all([
@@ -88,7 +116,7 @@ export class CarsController {
     return this.carsService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Update car' })
   @ApiParam({ name: 'id', description: 'Car ID' })
@@ -96,6 +124,7 @@ export class CarsController {
   @ApiResponse({ status: 200, description: 'Car updated successfully' })
   @ApiResponse({ status: 404, description: 'Car not found' })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
+  @UsePipes(new EmptyStringToNullPipe())
   update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
     return this.carsService.update(id, updateCarDto);
   }
@@ -107,8 +136,14 @@ export class CarsController {
   @ApiBody({ type: AssignProductDto })
   @ApiResponse({ status: 200, description: 'Product assigned successfully' })
   @ApiResponse({ status: 404, description: 'Car or product not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Inventory Manager role required' })
-  assignProduct(@Param('id') carId: string, @Body() assignProductDto: AssignProductDto) {
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Inventory Manager role required',
+  })
+  assignProduct(
+    @Param('id') carId: string,
+    @Body() assignProductDto: AssignProductDto,
+  ) {
     return this.carsService.assignProduct(carId, assignProductDto);
   }
 
@@ -119,8 +154,14 @@ export class CarsController {
   @ApiParam({ name: 'productId', description: 'Product ID' })
   @ApiResponse({ status: 200, description: 'Product removed successfully' })
   @ApiResponse({ status: 404, description: 'Car or product not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Inventory Manager role required' })
-  removeProduct(@Param('id') carId: string, @Param('productId') productId: string) {
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Inventory Manager role required',
+  })
+  removeProduct(
+    @Param('id') carId: string,
+    @Param('productId') productId: string,
+  ) {
     return this.carsService.removeProduct(carId, productId);
   }
 
@@ -129,10 +170,18 @@ export class CarsController {
   @ApiOperation({ summary: 'Update product quantity in car' })
   @ApiParam({ name: 'id', description: 'Car ID' })
   @ApiParam({ name: 'productId', description: 'Product ID' })
-  @ApiBody({ schema: { type: 'object', properties: { quantity: { type: 'number' } } } })
-  @ApiResponse({ status: 200, description: 'Product quantity updated successfully' })
+  @ApiBody({
+    schema: { type: 'object', properties: { quantity: { type: 'number' } } },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Product quantity updated successfully',
+  })
   @ApiResponse({ status: 404, description: 'Car or product not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Inventory Manager role required' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Inventory Manager role required',
+  })
   updateProductQuantity(
     @Param('id') carId: string,
     @Param('productId') productId: string,
@@ -145,9 +194,15 @@ export class CarsController {
   @Roles(UserRole.ADMIN, UserRole.DRIVER)
   @ApiOperation({ summary: 'Create daily record' })
   @ApiBody({ type: DailyRecordDto })
-  @ApiResponse({ status: 201, description: 'Daily record created successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Daily record created successfully',
+  })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Driver role required' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Driver role required',
+  })
   createDailyRecord(@Body() dailyRecordDto: DailyRecordDto) {
     return this.carsService.createDailyRecord(dailyRecordDto);
   }
