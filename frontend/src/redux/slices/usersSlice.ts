@@ -63,13 +63,15 @@ const usersSlice = createSlice({
         state.users.push(action.payload);
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        const index = state.users.findIndex((u) => u.id === action.payload.id);
+        const index = state.users.findIndex(
+          (u) => u._id === action.payload._id
+        );
         if (index !== -1) {
           state.users[index] = action.payload;
         }
       })
       .addCase(deleteUser.fulfilled, (state, action) => {
-        state.users = state.users.filter((u) => u.id !== action.payload);
+        state.users = state.users.filter((u) => u._id !== action.payload);
       });
   },
 });

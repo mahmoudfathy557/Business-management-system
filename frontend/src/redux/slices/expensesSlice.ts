@@ -141,7 +141,7 @@ const expensesSlice = createSlice({
       })
       .addCase(updateExpense.fulfilled, (state, action) => {
         const index = state.expenses.findIndex(
-          (e) => e.id === action.payload.id
+          (e) => e._id === action.payload._id
         );
         if (index !== -1) {
           const oldExpense = state.expenses[index];
@@ -162,11 +162,11 @@ const expensesSlice = createSlice({
       })
       .addCase(deleteExpense.fulfilled, (state, action) => {
         const deletedExpense = state.expenses.find(
-          (e) => e.id === action.payload
+          (e) => e._id === action.payload
         );
         if (deletedExpense) {
           state.expenses = state.expenses.filter(
-            (e) => e.id !== action.payload
+            (e) => e._id !== action.payload
           );
           state.totalExpenses -= deletedExpense.amount;
           state.expensesByType[deletedExpense.type] =

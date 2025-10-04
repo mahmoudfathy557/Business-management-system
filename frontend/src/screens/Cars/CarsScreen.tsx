@@ -54,9 +54,9 @@ const CarsScreen: React.FC = () => {
     const renderCar = ({ item }: { item: Car }) => (
         <CarCard
             car={item}
-            onPress={() => (navigation as any).navigate('CarDetails' as never, { carId: item.id } as never)}
-            onEdit={() => (navigation as any).navigate('EditCar' as never, { carId: item.id } as never)}
-            onDelete={() => handleDeleteCar(item.id)}
+            onPress={() => (navigation as any).navigate('CarDetails' as never, { carId: item._id } as never)}
+            onEdit={() => (navigation as any).navigate('EditCar' as never, { carId: item._id } as never)}
+            onDelete={() => handleDeleteCar(item._id)}
             showActions={user?.role === 'admin'}
         />
     );
@@ -80,7 +80,10 @@ const CarsScreen: React.FC = () => {
             <FlatList
                 data={filteredCars}
                 renderItem={renderCar}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => {
+                    console.log("🚀 ~ item:", item)
+                    
+                    return item._id}}
                 ListHeaderComponent={renderHeader}
                 ListEmptyComponent={renderEmpty}
                 refreshControl={

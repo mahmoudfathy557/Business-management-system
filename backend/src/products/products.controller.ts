@@ -145,11 +145,6 @@ export class ProductsController {
     description: 'Forbidden - Admin or Inventory Manager role required',
   })
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    console.log(
-      '🚀 ~ ProductsController ~ update ~ updateProductDto:',
-      updateProductDto,
-    );
-    console.log('🚀 ~ ProductsController ~ update ~ id:', id);
     return this.productsService.update(id, updateProductDto);
   }
 

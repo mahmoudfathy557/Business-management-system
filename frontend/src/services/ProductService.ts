@@ -43,7 +43,7 @@ class ProductService extends HttpService {
     id: string,
     data: Partial<ProductFormData>
   ): Promise<Product> {
-    const response: AxiosResponse<ApiResponse<Product>> = await this.api.put(
+    const response: AxiosResponse<ApiResponse<Product>> = await this.api.patch(
       `/products/${id}`,
       data
     );

@@ -1,6 +1,6 @@
 // User and Authentication Types
 export interface User {
-  id: string;
+  _id: string;
   email: string;
   name: string;
   role: UserRole;
@@ -54,7 +54,7 @@ export interface Product {
 }
 
 export interface StockMovement {
-  id: string;
+  _id: string;
   productId: string;
   type: "in" | "out";
   quantity: number;
@@ -66,7 +66,7 @@ export interface StockMovement {
 
 // Car and Driver Types
 export interface Car {
-  id: string;
+  _id: string;
   plateNumber: string;
   model: string;
   year: number;
@@ -79,7 +79,7 @@ export interface Car {
 }
 
 export interface CarProduct {
-  id: string;
+  _id: string;
   carId: string;
   productId: string;
   product: Product;
@@ -88,7 +88,7 @@ export interface CarProduct {
 }
 
 export interface DailyRecord {
-  id: string;
+  _id: string;
   carId: string;
   driverId: string;
   date: string;
@@ -100,7 +100,7 @@ export interface DailyRecord {
 
 // Finance Types
 export interface Expense {
-  id: string;
+  _id: string;
   type: ExpenseType;
   amount: number;
   description: string;
@@ -114,7 +114,7 @@ export interface Expense {
   createdAt: string;
   updatedAt: string;
   createdBy: {
-    id: string;
+    _id: string;
     name: string;
     email: string;
     role: UserRole;
@@ -130,7 +130,7 @@ export enum ExpenseType {
 }
 
 export interface Income {
-  id: string;
+  _id: string;
   carId: string;
   amount: number;
   date: string;

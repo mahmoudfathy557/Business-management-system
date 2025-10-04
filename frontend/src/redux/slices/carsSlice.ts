@@ -63,13 +63,13 @@ const carsSlice = createSlice({
         state.cars.push(action.payload);
       })
       .addCase(updateCar.fulfilled, (state, action) => {
-        const index = state.cars.findIndex((c) => c.id === action.payload.id);
+        const index = state.cars.findIndex((c) => c._id === action.payload._id);
         if (index !== -1) {
           state.cars[index] = action.payload;
         }
       })
       .addCase(deleteCar.fulfilled, (state, action) => {
-        state.cars = state.cars.filter((c) => c.id !== action.payload);
+        state.cars = state.cars.filter((c) => c._id !== action.payload);
       });
   },
 });

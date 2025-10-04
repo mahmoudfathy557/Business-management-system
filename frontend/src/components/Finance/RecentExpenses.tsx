@@ -24,9 +24,9 @@ const RecentExpenses: React.FC<RecentExpensesProps> = ({ expenses, onExpensePres
                 ) : (
                     expenses.slice(0, 10).map((expense: Expense) => (
                         <ExpenseForm
-                            key={expense.id}
+                            key={expense._id}
                             expense={expense}
-                            onPress={() => onExpensePress(expense.id)}
+                            onPress={() => onExpensePress(expense._id)}
                         />
                     ))
                 )}
