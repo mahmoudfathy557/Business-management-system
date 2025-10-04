@@ -65,15 +65,15 @@ class ApiService {
 
   // Authentication APIs
   async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
-    const response: AxiosResponse<{ user: User; token: string }> =
+    const response: AxiosResponse<ApiResponse<{ user: User; token: string }>> =
       await this.api.post('/auth/login', credentials);
-    return response.data;
+    return response.data.data;
   }
 
   async register(data: RegisterData): Promise<{ user: User; token: string }> {
-    const response: AxiosResponse<{ user: User; token: string }> =
+    const response: AxiosResponse<ApiResponse<{ user: User; token: string }>> =
       await this.api.post('/auth/register', data);
-    return response.data;
+    return response.data.data;
   }
 
   async getProfile(): Promise<User> {
