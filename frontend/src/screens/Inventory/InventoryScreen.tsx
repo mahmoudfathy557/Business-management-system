@@ -67,9 +67,9 @@ const InventoryScreen: React.FC = () => {
     const renderProduct = ({ item }: { item: Product }) => (
         <ProductCard
             product={item}
-            onPress={() => (navigation as any).navigate('ProductDetails', { productId: item.id })}
-            onEdit={() => (navigation as any).navigate('EditProduct', { productId: item.id })}
-            onDelete={() => handleDeleteProduct(item.id)}
+            onPress={() => (navigation as any).navigate('ProductDetails', { productId: item._id })}
+            onEdit={() => (navigation as any).navigate('EditProduct', { productId: item._id })}
+            onDelete={() => handleDeleteProduct(item._id)}
             showActions={user?.role === 'admin' || user?.role === 'inventory_manager'}
         />
     );
@@ -92,7 +92,7 @@ const InventoryScreen: React.FC = () => {
             <FlatList
                 data={products}
                 renderItem={renderProduct}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
                 ListHeaderComponent={renderHeader}
                 ListEmptyComponent={renderEmpty}
                 refreshControl={

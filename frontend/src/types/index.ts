@@ -11,10 +11,10 @@ export interface User {
 }
 
 export enum UserRole {
-  SUPER_ADMIN = 'super_admin',
-  ADMIN = 'admin',
-  INVENTORY_MANAGER = 'inventory_manager',
-  DRIVER = 'driver'
+  SUPER_ADMIN = "super_admin",
+  ADMIN = "admin",
+  INVENTORY_MANAGER = "inventory_manager",
+  DRIVER = "driver",
 }
 
 export interface AuthState {
@@ -38,7 +38,7 @@ export interface RegisterData {
 
 // Product and Inventory Types
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   category: string;
@@ -56,7 +56,7 @@ export interface Product {
 export interface StockMovement {
   id: string;
   productId: string;
-  type: 'in' | 'out';
+  type: "in" | "out";
   quantity: number;
   reason: string;
   carId?: string;
@@ -123,10 +123,10 @@ export interface Expense {
 }
 
 export enum ExpenseType {
-  FUEL = 'fuel',
-  MAINTENANCE = 'maintenance',
-  SALARY = 'salary',
-  OTHER = 'other'
+  FUEL = "fuel",
+  MAINTENANCE = "maintenance",
+  SALARY = "salary",
+  OTHER = "other",
 }
 
 export interface Income {

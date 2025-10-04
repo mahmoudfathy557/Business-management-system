@@ -10,9 +10,21 @@ import {
   Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+  ApiParam,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { ProductsService } from './products.service';
-import { CreateProductDto, UpdateProductDto, StockMovementDto } from './dto/product.dto';
+import {
+  CreateProductDto,
+  UpdateProductDto,
+  StockMovementDto,
+} from './dto/product.dto';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { UserRole } from '../users/schemas/user.schema';
@@ -31,7 +43,10 @@ export class ProductsController {
   @ApiBody({ type: CreateProductDto })
   @ApiResponse({ status: 201, description: 'Product created successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Inventory Manager role required' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Inventory Manager role required',
+  })
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
@@ -57,22 +72,34 @@ export class ProductsController {
   @Get('low-stock')
   @Roles(UserRole.ADMIN, UserRole.INVENTORY_MANAGER)
   @ApiOperation({ summary: 'Get low stock products' })
-  @ApiResponse({ status: 200, description: 'Low stock products retrieved successfully' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Inventory Manager role required' })
+  @ApiResponse({
+    status: 200,
+    description: 'Low stock products retrieved successfully',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Inventory Manager role required',
+  })
   getLowStockProducts() {
     return this.productsService.getLowStockProducts();
   }
 
   @Get('categories')
   @ApiOperation({ summary: 'Get all product categories' })
-  @ApiResponse({ status: 200, description: 'Categories retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Categories retrieved successfully',
+  })
   getCategories() {
     return this.productsService.getCategories();
   }
 
   @Get('count')
   @ApiOperation({ summary: 'Get total products count' })
-  @ApiResponse({ status: 200, description: 'Total products count retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Total products count retrieved successfully',
+  })
   getTotalProductsCount() {
     return this.productsService.getTotalProductsCount();
   }
@@ -89,7 +116,10 @@ export class ProductsController {
   @Get('category/:category')
   @ApiOperation({ summary: 'Get products by category' })
   @ApiParam({ name: 'category', description: 'Product category' })
-  @ApiResponse({ status: 200, description: 'Products by category retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Products by category retrieved successfully',
+  })
   findByCategory(@Param('category') category: string) {
     return this.productsService.getProductsByCategory(category);
   }
@@ -110,8 +140,16 @@ export class ProductsController {
   @ApiBody({ type: UpdateProductDto })
   @ApiResponse({ status: 200, description: 'Product updated successfully' })
   @ApiResponse({ status: 404, description: 'Product not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Inventory Manager role required' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Inventory Manager role required',
+  })
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    console.log(
+      '🚀 ~ ProductsController ~ update ~ updateProductDto:',
+      updateProductDto,
+    );
+    console.log('🚀 ~ ProductsController ~ update ~ id:', id);
     return this.productsService.update(id, updateProductDto);
   }
 
@@ -122,8 +160,14 @@ export class ProductsController {
   @ApiBody({ type: StockMovementDto })
   @ApiResponse({ status: 200, description: 'Stock updated successfully' })
   @ApiResponse({ status: 404, description: 'Product not found' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Admin or Inventory Manager role required' })
-  updateStock(@Param('id') id: string, @Body() stockMovementDto: StockMovementDto) {
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Admin or Inventory Manager role required',
+  })
+  updateStock(
+    @Param('id') id: string,
+    @Body() stockMovementDto: StockMovementDto,
+  ) {
     return this.productsService.updateStock(id, stockMovementDto);
   }
 

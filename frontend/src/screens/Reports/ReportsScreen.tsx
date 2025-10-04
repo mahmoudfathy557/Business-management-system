@@ -4,7 +4,7 @@ import { Text, Card, Title, SegmentedButtons, Button, DataTable } from 'react-na
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import apiService from '../../services/api';
+import { reportService } from '../../services/api';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -28,9 +28,9 @@ const ReportsScreen: React.FC = () => {
             const startDate = new Date(Date.now() - getPeriodDays() * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
             const [salesResponse, expenseResponse, profitResponse] = await Promise.all([
-                apiService.getSalesReport(startDate, endDate),
-                apiService.getExpenseReport(startDate, endDate),
-                apiService.getProfitReport(startDate, endDate)
+reportService.getSalesReport(startDate, endDate),
+reportService.getExpenseReport(startDate, endDate),
+reportService.getProfitReport(startDate, endDate)
             ]);
 
             setSalesData(salesResponse.data);
