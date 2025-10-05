@@ -214,6 +214,7 @@ export interface CarFormData {
   model: string;
   year: number;
   driverId?: string | null;
+  driver?: User; // Add driver to CarFormData to allow access to driver._id
 }
 
 export interface ExpenseFormData {

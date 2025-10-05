@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import FormInput from '../FormInput';
-import { CarFormData } from '../../types';
+import { CarFormData, Car } from '../../types';
 
 interface CarFormProps {
-    initialValues?: CarFormData;
+    initialValues?: CarFormData | Car;
     onSubmit: (formData: CarFormData) => void;
     isEdit?: boolean;
     isLoading?: boolean;
@@ -16,7 +16,7 @@ const CarForm: React.FC<CarFormProps> = ({ initialValues, onSubmit, isEdit = fal
         plateNumber: initialValues?.plateNumber || '',
         model: initialValues?.model || '',
         year: initialValues?.year || new Date().getFullYear(),
-        driverId: initialValues?.driverId || '',
+        driverId: initialValues?.driverId || initialValues?.driver?._id || null, // Prioritize driverId, then driver._id
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
 

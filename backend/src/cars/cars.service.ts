@@ -36,6 +36,7 @@ export class CarsService {
     return this.carModel
       .find({ isActive: true })
       .populate('driver', 'name email role')
+
       .populate('assignedProducts.productId', 'name price')
       .exec();
   }
@@ -44,6 +45,7 @@ export class CarsService {
     const car = await this.carModel
       .findById(id)
       .populate('driver', 'name email role')
+
       .populate('assignedProducts.productId', 'name price description')
 
       .exec();
@@ -59,6 +61,7 @@ export class CarsService {
     const car = await this.carModel
       .findByIdAndUpdate(id, updateCarDto, { new: true })
       .populate('driver', 'name email role')
+
       .populate('assignedProducts.productId', 'name price')
 
       .exec();
