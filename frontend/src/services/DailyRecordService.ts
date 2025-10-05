@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { DailyRecord, ApiResponse } from "../types";
+import { DailyRecord, ApiResponse, SaleItem } from "../types";
 import HttpService from "./HttpService";
 
 class DailyRecordService extends HttpService {
@@ -9,8 +9,11 @@ class DailyRecordService extends HttpService {
 
   async createDailyRecord(data: {
     carId: string;
-    income: number;
-    expenses: number;
+    driverId: string;
+    date: string;
+    totalSales: number;
+    totalExpenses: number;
+    sales: SaleItem[];
     notes?: string;
   }): Promise<DailyRecord> {
     const response: AxiosResponse<ApiResponse<DailyRecord>> =

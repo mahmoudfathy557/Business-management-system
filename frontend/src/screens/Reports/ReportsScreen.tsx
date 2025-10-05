@@ -140,11 +140,11 @@ reportService.getProfitReport(startDate, endDate)
 
     const renderDataTable = () => {
         const mockTableData = [
-            { period: 'Monday', sales: 1200, expenses: 500, profit: 700 },
-            { period: 'Tuesday', sales: 1500, expenses: 600, profit: 900 },
-            { period: 'Wednesday', sales: 1800, expenses: 400, profit: 1400 },
-            { period: 'Thursday', sales: 1400, expenses: 700, profit: 700 },
-            { period: 'Friday', sales: 2000, expenses: 800, profit: 1200 },
+            { period: 'Monday', totalSales: 1200, totalExpenses: 500, profit: 700 },
+            { period: 'Tuesday', totalSales: 1500, totalExpenses: 600, profit: 900 },
+            { period: 'Wednesday', totalSales: 1800, totalExpenses: 400, profit: 1400 },
+            { period: 'Thursday', totalSales: 1400, totalExpenses: 700, profit: 700 },
+            { period: 'Friday', totalSales: 2000, totalExpenses: 800, profit: 1200 },
         ];
 
         return (
@@ -154,16 +154,16 @@ reportService.getProfitReport(startDate, endDate)
                     <DataTable>
                         <DataTable.Header>
                             <DataTable.Title>Period</DataTable.Title>
-                            <DataTable.Title numeric>Sales</DataTable.Title>
-                            <DataTable.Title numeric>Expenses</DataTable.Title>
+                            <DataTable.Title numeric>Total Sales</DataTable.Title>
+                            <DataTable.Title numeric>Total Expenses</DataTable.Title>
                             <DataTable.Title numeric>Profit</DataTable.Title>
                         </DataTable.Header>
 
                         {mockTableData.map((row, index) => (
                             <DataTable.Row key={index}>
                                 <DataTable.Cell>{row.period}</DataTable.Cell>
-                                <DataTable.Cell numeric>${row.sales}</DataTable.Cell>
-                                <DataTable.Cell numeric>${row.expenses}</DataTable.Cell>
+                                <DataTable.Cell numeric>${row.totalSales}</DataTable.Cell>
+                                <DataTable.Cell numeric>${row.totalExpenses}</DataTable.Cell>
                                 <DataTable.Cell numeric>
                                     <Text style={{ color: row.profit >= 0 ? '#4caf50' : '#f44336' }}>
                                         ${row.profit}

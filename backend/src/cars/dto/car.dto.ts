@@ -1,3 +1,5 @@
+import { OmitType } from '@nestjs/swagger';
+import { Expose, Type } from 'class-transformer';
 import {
   IsMongoId,
   IsNotEmpty,
@@ -7,6 +9,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { Car } from '../schemas/car.schema';
 
 export class CreateCarDto {
   @IsString()

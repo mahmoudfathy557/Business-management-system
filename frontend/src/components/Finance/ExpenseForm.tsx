@@ -68,8 +68,10 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ expense, onPress }) => {
 
                     {expense.carId && (
                         <View style={styles.carContainer}>
-                            <Paragraph style={styles.carLabel}>Car ID:</Paragraph>
-                            <Paragraph style={styles.carId}>{expense.carId._id}</Paragraph>
+                            <Paragraph style={styles.carLabel}>Car:</Paragraph>
+                            <Paragraph style={styles.carId}>
+                                {typeof expense.carId === 'string' ? expense.carId : expense.carId.plateNumber}
+                            </Paragraph>
                         </View>
                     )}
                 </View>

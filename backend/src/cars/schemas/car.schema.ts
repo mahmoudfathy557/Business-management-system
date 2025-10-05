@@ -13,7 +13,20 @@ export class CarProduct {
   assignedAt: Date;
 }
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true,
+  // create a virtual field 'driver' that references the User model based on driverId
+  // Deselect driverId when returning the document
+  toJSON: {
+    virtuals: true,
+    transform: (doc, ret: Record<string, any>) => {
+      delete ret.driverId;
+
+      return ret;
+    },
+  },
+  toObject: { virtuals: true },
+})
 export class Car {
   @Prop({ required: true, unique: true })
   plateNumber: string;
@@ -36,3 +49,10 @@ export class Car {
 
 export type CarDocument = Car & Document;
 export const CarSchema = SchemaFactory.createForClass(Car);
+
+CarSchema.virtual('driver', {
+  ref: 'User',
+  localField: 'driverId',
+  foreignField: '_id',
+  justOne: true,
+});

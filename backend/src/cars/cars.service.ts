@@ -35,7 +35,7 @@ export class CarsService {
   async findAll(): Promise<Car[]> {
     return this.carModel
       .find({ isActive: true })
-      .populate('driverId', 'name email role')
+      .populate('driver', 'name email role')
       .populate('assignedProducts.productId', 'name price')
       .exec();
   }
@@ -43,8 +43,9 @@ export class CarsService {
   async findOne(id: string): Promise<Car> {
     const car = await this.carModel
       .findById(id)
-      .populate('driverId', 'name email role')
+      .populate('driver', 'name email role')
       .populate('assignedProducts.productId', 'name price description')
+
       .exec();
 
     if (!car) {
@@ -57,8 +58,9 @@ export class CarsService {
   async update(id: string, updateCarDto: UpdateCarDto): Promise<Car> {
     const car = await this.carModel
       .findByIdAndUpdate(id, updateCarDto, { new: true })
-      .populate('driverId', 'name email role')
+      .populate('driver', 'name email role')
       .populate('assignedProducts.productId', 'name price')
+
       .exec();
 
     if (!car) {

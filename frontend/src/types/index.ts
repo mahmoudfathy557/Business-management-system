@@ -70,7 +70,7 @@ export interface Car {
   plateNumber: string;
   model: string;
   year: number;
-  driverId?: string;
+  driverId?: string | null;
   driver?: User;
   assignedProducts: CarProduct[];
   isActive: boolean;
@@ -87,13 +87,21 @@ export interface CarProduct {
   assignedAt: string;
 }
 
+export interface SaleItem {
+  _id: string;
+  productId: string;
+  quantity: number;
+  price: number;
+}
+
 export interface DailyRecord {
   _id: string;
   carId: string;
   driverId: string;
   date: string;
-  income: number;
-  expenses: number;
+  totalSales: number;
+  totalExpenses: number;
+  sales: SaleItem[];
   notes?: string;
   createdAt: string;
 }
@@ -104,21 +112,25 @@ export interface Expense {
   type: ExpenseType;
   amount: number;
   description: string;
-  carId?: {
-    _id: string;
-    plateNumber: string;
-    model: string;
-    year: number;
-  };
+  carId?:
+    | string
+    | {
+        _id: string;
+        plateNumber: string;
+        model: string;
+        year: number;
+      };
   date: string;
   createdAt: string;
   updatedAt: string;
-  createdBy: {
-    _id: string;
-    name: string;
-    email: string;
-    role: UserRole;
-  };
+  createdBy:
+    | string
+    | {
+        _id: string;
+        name: string;
+        email: string;
+        role: UserRole;
+      };
   isActive: boolean;
 }
 
@@ -201,7 +213,7 @@ export interface CarFormData {
   plateNumber: string;
   model: string;
   year: number;
-  driverId?: string;
+  driverId?: string | null;
 }
 
 export interface ExpenseFormData {
