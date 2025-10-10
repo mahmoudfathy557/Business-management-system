@@ -7,6 +7,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Car, CarDocument } from './schemas/car.schema';
 import {
+  DailyRecord,
+  DailyRecordDocument,
+} from './schemas/daily-record.schema';
+import {
   CreateCarDto,
   UpdateCarDto,
   AssignProductDto,
@@ -15,7 +19,11 @@ import {
 
 @Injectable()
 export class CarsService {
-  constructor(@InjectModel(Car.name) private carModel: Model<CarDocument>) {}
+  constructor(
+    @InjectModel(Car.name) private carModel: Model<CarDocument>,
+    @InjectModel(DailyRecord.name)
+    private dailyRecordModel: Model<DailyRecordDocument>,
+  ) {}
 
   async create(createCarDto: CreateCarDto): Promise<Car> {
     const existingCar = await this.carModel.findOne({
@@ -36,7 +44,6 @@ export class CarsService {
     return this.carModel
       .find({ isActive: true })
       .populate('driver', 'name email role')
-
       .populate('assignedProducts.productId', 'name price')
       .exec();
   }
@@ -172,16 +179,19 @@ export class CarsService {
       .exec();
   }
 
-  async createDailyRecord(dailyRecordDto: DailyRecordDto): Promise<any> {
-    // This would typically be stored in a separate DailyRecord collection
-    // For now, we'll return the data structure
-    return {
-      carId: dailyRecordDto.carId,
-      income: dailyRecordDto.income,
-      expenses: dailyRecordDto.expenses,
-      notes: dailyRecordDto.notes,
-      date: new Date(),
-      createdAt: new Date(),
-    };
+  async createDailyRecord(
+    dailyRecordDto: DailyRecordDto,
+  ): Promise<DailyRecord> {
+    const dailyRecord = new this.dailyRecordModel({
+      ...dailyRecordDto,
+      date: new Date(dailyRecordDto.date), // Convert date string to Date object
+      carId: new Types.ObjectId(dailyRecordDto.carId),
+      driverId: new Types.ObjectId(dailyRecordDto.driverId),
+      sales: dailyRecordDto.sales.map((saleItem) => ({
+        ...saleItem,
+        productId: new Types.ObjectId(saleItem.productId),
+      })),
+    });
+    return dailyRecord.save();
   }
 }

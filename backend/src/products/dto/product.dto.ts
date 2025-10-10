@@ -105,10 +105,10 @@ export class StockMovementDto {
   reason: string;
 
   @IsOptional()
-  @IsMongoId()
+  @IsString()
   carId?: string;
 
   @IsOptional()
-  @IsMongoId()
+  @IsString()
   driverId?: string;
 }

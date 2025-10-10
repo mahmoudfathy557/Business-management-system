@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { Button } from 'react-native-paper';
 import FormInput from '../FormInput';
-import { CarFormData, Car } from '../../types';
+import { CarFormData, Car, User } from '../../types';
+import { Picker } from '@react-native-picker/picker';
 
 interface CarFormProps {
     initialValues?: CarFormData | Car;
     onSubmit: (formData: CarFormData) => void;
     isEdit?: boolean;
     isLoading?: boolean;
+    drivers: User[];
 }
 
-const CarForm: React.FC<CarFormProps> = ({ initialValues, onSubmit, isEdit = false, isLoading = false }) => {
+const CarForm: React.FC<CarFormProps> = ({ initialValues, onSubmit, isEdit = false, isLoading = false, drivers }) => {
     const [formData, setFormData] = useState<CarFormData>({
         plateNumber: initialValues?.plateNumber || '',
         model: initialValues?.model || '',
         year: initialValues?.year || new Date().getFullYear(),
-        driverId: initialValues?.driverId || initialValues?.driver?._id || null, // Prioritize driverId, then driver._id
+        driverId: (initialValues as Car)?.driver?._id || initialValues?.driverId || null,
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -39,7 +41,7 @@ const CarForm: React.FC<CarFormProps> = ({ initialValues, onSubmit, isEdit = fal
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleInputChange = (field: keyof CarFormData, value: string | number) => {
+    const handleInputChange = (field: keyof CarFormData, value: string | number | null) => {
         setFormData(prev => ({ ...prev, [field]: value }));
         if (errors[field]) {
             setErrors(prev => ({ ...prev, [field]: '' }));
@@ -76,6 +78,21 @@ const CarForm: React.FC<CarFormProps> = ({ initialValues, onSubmit, isEdit = fal
                 keyboardType="numeric"
                 required
             />
+
+            <View style={styles.pickerContainer}>
+                <Text style={styles.pickerLabel}>Assign Driver (Optional)</Text>
+                <Picker
+                    selectedValue={formData.driverId}
+                    onValueChange={(itemValue) => handleInputChange('driverId', itemValue)}
+                    style={styles.picker}
+                >
+                    <Picker.Item label="No Driver" value='' />
+                    {drivers.map((driver) => (
+                        <Picker.Item key={driver._id} label={driver.name} value={driver._id} />
+                    ))}
+                </Picker>
+            </View>
+
             <View style={styles.buttonContainer}>
                 <Button
                     mode="contained"
@@ -100,6 +117,23 @@ const styles = StyleSheet.create({
     },
     submitButton: {
         flex: 1,
+    },
+    pickerContainer: {
+        marginTop: 16,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 4,
+        backgroundColor: '#fff',
+    },
+    pickerLabel: {
+        fontSize: 12,
+        color: '#666',
+        paddingHorizontal: 12,
+        paddingTop: 8,
+    },
+    picker: {
+        height: 50,
+        width: '100%',
     },
 });
 

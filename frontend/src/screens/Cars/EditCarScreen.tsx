@@ -4,8 +4,9 @@ import { Text, Card, Title, Button, Divider, ActivityIndicator } from 'react-nat
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { updateCar, fetchCars } from '../../redux/slices/carsSlice';
+import { fetchUsers } from '../../redux/slices/usersSlice';
 import { AppDispatch, RootState } from '../../redux/store';
-import { CarFormData, RootStackParamList } from '../../types';
+import { CarFormData, RootStackParamList, UserRole } from '../../types';
 import CarForm from '../../components/Cars/CarForm';
 
 type EditCarRouteProp = RouteProp<RootStackParamList, 'EditCar'>;
@@ -28,6 +29,8 @@ const EditCarScreen: React.FC = () => {
     }
 
     const { cars, isLoading } = useSelector((state: RootState) => state.cars);
+    const { users: allUsers, isLoading: isUsersLoading } = useSelector((state: RootState) => state.users);
+    const drivers = allUsers.filter(user => user.role === UserRole.DRIVER);
     const [isSubmitting, setIsSubmitting] = useState(false);
     
     const car = cars.find(c => c._id === carId);
@@ -36,6 +39,7 @@ const EditCarScreen: React.FC = () => {
         if (!car && !isLoading) {
             dispatch(fetchCars());
         }
+        dispatch(fetchUsers());
     }, [car, dispatch, isLoading]);
 
     const handleSubmit = async (formData: CarFormData) => {
@@ -85,7 +89,8 @@ const EditCarScreen: React.FC = () => {
                         onSubmit={handleSubmit} 
                         initialValues={car}
                         isEdit 
-                        isLoading={isSubmitting} 
+                        isLoading={isSubmitting || isUsersLoading} 
+                        drivers={drivers}
                     />
                 </Card.Content>
             </Card>

@@ -23,7 +23,7 @@ export class CreateExpenseDto {
   description: string;
 
   @IsOptional()
-  @IsMongoId()
+  @IsString()
   carId?: string;
 
   @IsDateString()
@@ -45,7 +45,7 @@ export class UpdateExpenseDto {
   description?: string;
 
   @IsOptional()
-  @IsMongoId()
+  @IsString()
   carId?: string;
 
   @IsOptional()
@@ -61,7 +61,7 @@ export class ExpenseReportDto {
   endDate: string;
 
   @IsOptional()
-  @IsMongoId()
+  @IsString()
   carId?: string;
 
   @IsOptional()

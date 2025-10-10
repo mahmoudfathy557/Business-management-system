@@ -79,10 +79,9 @@ export interface Car {
 }
 
 export interface CarProduct {
-  _id: string;
-  carId: string;
+  _id: string; // Mongoose adds _id to subdocuments
   productId: string;
-  product: Product;
+  product?: Product; // Populated field, optional
   quantity: number;
   assignedAt: string;
 }
@@ -215,7 +214,6 @@ export interface CarFormData {
   model: string;
   year: number;
   driverId?: string | null;
-  driver?: User; // Add driver to CarFormData to allow access to driver._id
 }
 
 export interface ExpenseFormData {
