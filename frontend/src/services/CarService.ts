@@ -14,7 +14,7 @@ class CarService extends HttpService {
     return response.data.data;
   }
 
-  async getCar(id: string): Promise<Car> {
+  async getCarById(id: string): Promise<Car> {
     const response: AxiosResponse<ApiResponse<Car>> = await this.api.get(
       `/cars/${id}`
     );
@@ -41,15 +41,18 @@ class CarService extends HttpService {
     await this.api.delete(`/cars/${id}`);
   }
 
-  async assignProductToCar(
+  async assignProduct(
     carId: string,
-    productId: string,
-    quantity: number
-  ): Promise<void> {
-    await this.api.post(`/cars/${carId}/products`, { productId, quantity });
+    data: { productId: string; quantity: number }
+  ): Promise<Car> {
+    const response: AxiosResponse<ApiResponse<Car>> = await this.api.post(
+      `/cars/${carId}/products`,
+      data
+    );
+    return response.data.data;
   }
 
-  async removeProductFromCar(carId: string, productId: string): Promise<void> {
+  async removeProduct(carId: string, productId: string): Promise<void> {
     await this.api.delete(`/cars/${carId}/products/${productId}`);
   }
 }

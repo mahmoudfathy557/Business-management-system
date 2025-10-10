@@ -65,6 +65,12 @@ export interface StockMovement {
 }
 
 // Car and Driver Types
+export interface ProductAssignment {
+  productId: Product;
+  quantity: number;
+  assignedAt: string;
+}
+
 export interface Car {
   _id: string;
   plateNumber: string;
@@ -72,18 +78,10 @@ export interface Car {
   year: number;
   driverId?: string | null;
   driver?: User;
-  assignedProducts: CarProduct[];
+  assignedProducts: ProductAssignment[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface CarProduct {
-  _id: string; // Mongoose adds _id to subdocuments
-  productId: string;
-  product?: Product; // Populated field, optional
-  quantity: number;
-  assignedAt: string;
 }
 
 export interface SaleItem {

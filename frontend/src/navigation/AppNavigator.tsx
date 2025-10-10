@@ -20,6 +20,7 @@ import AddProductScreen from '../screens/Inventory/AddProductScreen';
 import EditProductScreen from '../screens/Inventory/EditProductScreen';
 import AddCarScreen from '../screens/Cars/AddCarScreen';
 import EditCarScreen from '../screens/Cars/EditCarScreen';
+import CarInventoryScreen from '../screens/Cars/CarInventoryScreen';
 import AddExpenseScreen from '../screens/Finance/AddExpenseScreen';
 import EditExpenseScreen from '../screens/Finance/EditExpenseScreen';
 import AddUserScreen from '../screens/Users/AddUserScreen';
@@ -226,6 +227,21 @@ const AppNavigator = () => {
                             component={EditCarScreen}
                             options={{ 
                                 title: 'Edit Car',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
+                        />
+                        <Stack.Screen
+                            name="CarInventory"
+                            component={CarInventoryScreen}
+                            options={{ 
+                                title: 'Car Inventory',
                                 headerShown: true,
                                 headerStyle: {
                                     backgroundColor: '#6200ea',

@@ -4,7 +4,7 @@ import { FAB } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { AppDispatch, RootState } from '../../redux/store';
-import { fetchCars, deleteCar } from '../../redux/slices';
+import { fetchCars, deleteCar } from '../../redux/slices/carsSlice';
 import CarCard from '../../components/Cars/CarCard';
 import { CarsHeader, CarsEmptyState } from '../../components/Cars';
 import { Car } from '../../types';
@@ -55,8 +55,9 @@ const CarsScreen: React.FC = () => {
         <CarCard
             car={item}
             onPress={() => (navigation as any).navigate('CarDetails' as never, { carId: item._id } as never)}
-            onEdit={() => (navigation as any).navigate('EditCar' as never, { carId: item._id } as never)}
+            onEdit={() => (navigation as any).navigate('EditCar'as never, { carId: item._id } as never)}
             onDelete={() => handleDeleteCar(item._id)}
+            onNavigateToInventory={() => (navigation as any).navigate('CarInventory' as never, { carId: item._id } as never)}
             showActions={user?.role === 'admin'}
         />
     );

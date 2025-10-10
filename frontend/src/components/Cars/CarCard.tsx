@@ -8,6 +8,7 @@ interface CarCardProps {
     onPress: () => void;
     onEdit?: () => void;
     onDelete?: () => void;
+    onNavigateToInventory?: () => void;
     showActions?: boolean;
 }
 
@@ -16,6 +17,7 @@ const CarCard: React.FC<CarCardProps> = ({
     onPress,
     onEdit,
     onDelete,
+    onNavigateToInventory,
     showActions = false,
 }) => {
     const assignedProductsCount = car.assignedProducts?.length || 0;
@@ -32,6 +34,13 @@ const CarCard: React.FC<CarCardProps> = ({
                     </View>
                     {showActions && (
                         <View style={styles.actions}>
+                            {onNavigateToInventory && (
+                                <IconButton
+                                    icon="store"
+                                    size={20}
+                                    onPress={onNavigateToInventory}
+                                />
+                            )}
                             {onEdit && (
                                 <IconButton
                                     icon="pencil"
