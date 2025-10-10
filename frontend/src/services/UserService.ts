@@ -23,7 +23,7 @@ class UserService extends HttpService {
   }
 
   async updateUser(id: string, data: Partial<RegisterData>): Promise<User> {
-    const response: AxiosResponse<ApiResponse<User>> = await this.api.put(
+    const response: AxiosResponse<ApiResponse<User>> = await this.api.patch(
       `/users/${id}`,
       data
     );

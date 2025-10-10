@@ -10,7 +10,14 @@ import {
   Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+  ApiParam,
+} from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { RolesGuard } from '../auth/roles.guard';
@@ -23,7 +30,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @Roles(UserRole.ADMIN)
@@ -42,14 +49,17 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
   findAll() {
-    console.log('first')
+    console.log('first');
     return this.usersService.findAll();
   }
 
   @Get('count')
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Get active users count' })
-  @ApiResponse({ status: 200, description: 'Active users count retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Active users count retrieved successfully',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
   getActiveUsersCount() {
     return this.usersService.getActiveUsersCount();
@@ -59,7 +69,10 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Get users by role' })
   @ApiParam({ name: 'role', description: 'User role' })
-  @ApiResponse({ status: 200, description: 'Users by role retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Users by role retrieved successfully',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
   findByRole(@Param('role') role: string) {
     return this.usersService.getUsersByRole(role);

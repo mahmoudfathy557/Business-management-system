@@ -76,5 +76,26 @@ const usersSlice = createSlice({
   },
 });
 
+import { createSelector } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+
 export const { clearUsersError } = usersSlice.actions;
 export { usersSlice };
+
+// Selectors
+const selectUsersState = (state: RootState) => state.users;
+
+export const selectAllUsers = createSelector(
+  selectUsersState,
+  (state) => state.users
+);
+
+export const selectUsersLoading = createSelector(
+  selectUsersState,
+  (state) => state.isLoading
+);
+
+export const selectUsersError = createSelector(
+  selectUsersState,
+  (state) => state.error
+);

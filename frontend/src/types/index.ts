@@ -195,6 +195,7 @@ export type RootStackParamList = {
   EditExpense: { expenseId: string };
   AddUser: undefined;
   EditUser: { userId: string };
+  UserDetails: { userId: string };
 };
 
 // Form Types

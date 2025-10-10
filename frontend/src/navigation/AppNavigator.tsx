@@ -22,8 +22,9 @@ import AddCarScreen from '../screens/Cars/AddCarScreen';
 import EditCarScreen from '../screens/Cars/EditCarScreen';
 import AddExpenseScreen from '../screens/Finance/AddExpenseScreen';
 import EditExpenseScreen from '../screens/Finance/EditExpenseScreen';
-import AddUserScreen from '../screens/Login/AddUserScreen';
-import EditUserScreen from '../screens/Login/EditUserScreen';
+import AddUserScreen from '../screens/Users/AddUserScreen';
+import EditUserScreen from '../screens/Users/EditUserScreen';
+import UserDetailsScreen from '../screens/Users/UserDetailsScreen';
 
 // Import icons
 import { MaterialIcons } from '@expo/vector-icons';
@@ -270,9 +271,24 @@ const AppNavigator = () => {
 
                         {/* User Screens */}
                         <Stack.Screen
+                            name="UserDetails"
+                            component={UserDetailsScreen}
+                            options={{
+                                title: 'User Details',
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: '#6200ea',
+                                },
+                                headerTintColor: '#fff',
+                                headerTitleStyle: {
+                                    fontWeight: 'bold',
+                                },
+                            }}
+                        />
+                        <Stack.Screen
                             name="AddUser"
                             component={AddUserScreen}
-                            options={{ 
+                            options={{
                                 title: 'Add User',
                                 headerShown: true,
                                 headerStyle: {
@@ -287,7 +303,7 @@ const AppNavigator = () => {
                         <Stack.Screen
                             name="EditUser"
                             component={EditUserScreen}
-                            options={{ 
+                            options={{
                                 title: 'Edit User',
                                 headerShown: true,
                                 headerStyle: {

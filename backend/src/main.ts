@@ -12,12 +12,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: [
-      'http://localhost:19006', // Expo web
-      'http://localhost:8081', // Expo dev server
-      'exp://192.168.1.8:8081', // Expo Go on your network
-      'exp://localhost:8081', // Expo Go local
-    ],
+    origin: true, // Reflect request origin
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
