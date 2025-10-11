@@ -4,16 +4,23 @@ import { FAB } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { InventoryHeader, InventoryEmptyState } from '../../components/Inventory';
-import ProductCard from '../../components/Inventory/ProductCard';
 import { fetchProducts, deleteProduct } from '../../redux/slices';
+import GenericTable, { MenuItem } from '../../components/GenericTable';
 import { AppDispatch, RootState } from '../../redux/store';
 import { Product } from '../../types';
- 
 
 const InventoryScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const { products, isLoading, total } = useSelector((state: RootState) => state.products);
+
+    const columns = [
+        { header: 'Name', accessor: 'name' as keyof Product },
+        { header: 'Category', accessor: 'category' as keyof Product },
+        { header: 'Price', accessor: 'price' as keyof Product },
+        { header: 'Stock Quantity', accessor: 'stockQuantity' as keyof Product },
+        { header: 'Min Stock Level', accessor: 'minStockLevel' as keyof Product },
+    ];
     const { user } = useSelector((state: RootState) => state.auth);
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -25,6 +32,21 @@ const InventoryScreen: React.FC = () => {
         dispatch(fetchProducts({ page: 1, limit: 20 }));
     }, [dispatch]);
 
+    const menuItems = (product: Product)=> {
+        const items: MenuItem[] = [];
+        if (user?.role === 'admin' || user?.role === 'inventory_manager') {
+            items.push({
+                title: 'Edit',
+                onPress: () => (navigation as any).navigate('SaveProduct', { productId: product._id }),
+            });
+            items.push({
+                title: 'Delete',
+                onPress: () => handleDeleteProduct(product._id),
+            });
+        }
+          return items;
+    };
+ 
     const onRefresh = async () => {
         setRefreshing(true);
         setPage(1);
@@ -64,45 +86,19 @@ const InventoryScreen: React.FC = () => {
         );
     };
 
-    const renderProduct = ({ item }: { item: Product }) => (
-        <ProductCard
-            product={item}
-            onPress={() => (navigation as any).navigate('ProductDetails', { productId: item._id })}
-            onEdit={() => (navigation as any).navigate('SaveProduct', { productId: item._id })}
-            onDelete={() => handleDeleteProduct(item._id)}
-            showActions={user?.role === 'admin' || user?.role === 'inventory_manager'}
-        />
-    );
-
-    const renderHeader = () => (
-        <InventoryHeader
-            searchQuery={searchQuery}
-            onSearchChange={onSearch}
-            totalProducts={total}
-            lowStockCount={products.length > 0 ? products.filter(p => p.stockQuantity <= p.minStockLevel).length : 0}
-        />
-    );
-
-    const renderEmpty = () => (
-        <InventoryEmptyState hasSearchQuery={!!searchQuery} />
-    );
-
     return (
         <View style={styles.container}>
-            <FlatList
-                data={products}
-                renderItem={renderProduct}
-                keyExtractor={(item) => item._id}
-                ListHeaderComponent={renderHeader}
-                ListEmptyComponent={renderEmpty}
-                refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                }
-                onEndReached={loadMore}
-                onEndReachedThreshold={0.1}
-                contentContainerStyle={styles.listContainer}
+            <InventoryHeader
+                searchQuery={searchQuery}
+                onSearchChange={onSearch}
+                totalProducts={total}
+                lowStockCount={products.length > 0 ? products.filter(p => p.stockQuantity <= p.minStockLevel).length : 0}
             />
-
+            <GenericTable
+                data={products}
+                columns={columns}
+                menuItems={menuItems}
+            />
             {(user?.role === 'admin' || user?.role === 'inventory_manager') && (
                 <FAB
                     style={styles.fab}
@@ -118,8 +114,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',
-    },
-    listContainer: {
         paddingBottom: 80,
     },
     fab: {
