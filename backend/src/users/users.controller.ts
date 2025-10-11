@@ -49,7 +49,6 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
   findAll() {
-    console.log('first');
     return this.usersService.findAll();
   }
 

@@ -19,7 +19,7 @@ export class DailyRecord {
   carId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  driverId: Types.ObjectId;
+  driver: Types.ObjectId;
 
   @Prop({ required: true })
   date: Date;

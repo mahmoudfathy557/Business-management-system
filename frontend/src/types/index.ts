@@ -60,7 +60,7 @@ export interface StockMovement {
   quantity: number;
   reason: string;
   carId?: string;
-  driverId?: string;
+  driver?: string;
   createdAt: string;
 }
 
@@ -76,7 +76,7 @@ export interface Car {
   plateNumber: string;
   model: string;
   year: number;
-  driverId?: string | null;
+
   driver?: User;
   assignedProducts: ProductAssignment[];
   isActive: boolean;
@@ -94,7 +94,7 @@ export interface SaleItem {
 export interface DailyRecord {
   _id: string;
   carId: string;
-  driverId: string;
+  driver: string;
   date: string;
   totalSales: number;
   totalExpenses: number;
@@ -211,7 +211,7 @@ export interface CarFormData {
   plateNumber: string;
   model: string;
   year: number;
-  driverId?: string | null;
+  driver?: User | string | null;
 }
 
 export interface ExpenseFormData {

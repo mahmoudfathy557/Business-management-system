@@ -9,7 +9,8 @@ class DailyRecordService extends HttpService {
 
   async createDailyRecord(data: {
     carId: string;
-    driverId: string;
+    driver
+: string;
     date: string;
     totalSales: number;
     totalExpenses: number;

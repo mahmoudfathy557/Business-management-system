@@ -15,8 +15,19 @@ export class DashboardService {
 
   async getDashboardSummary() {
     const today = new Date();
-    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+    const startOfDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+    const endOfDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      23,
+      59,
+      59,
+    );
 
     const [
       lowStockProducts,
@@ -62,12 +73,18 @@ export class DashboardService {
     return {
       data: mockSalesData,
       total: mockSalesData.reduce((sum, sale) => sum + sale.amount, 0),
-      average: mockSalesData.reduce((sum, sale) => sum + sale.amount, 0) / mockSalesData.length,
+      average:
+        mockSalesData.reduce((sum, sale) => sum + sale.amount, 0) /
+        mockSalesData.length,
     };
   }
 
   async getExpenseReport(startDate: string, endDate: string, carId?: string) {
-    return this.expensesService.getExpensesByDateRange(startDate, endDate, carId);
+    return this.expensesService.getExpensesByDateRange(
+      startDate,
+      endDate,
+      carId,
+    );
   }
 
   async getProfitReport(startDate: string, endDate: string, carId?: string) {
@@ -77,7 +94,10 @@ export class DashboardService {
     ]);
 
     const totalIncome = salesData.total;
-    const totalExpenses = expensesData.reduce((sum, expense) => sum + expense.amount, 0);
+    const totalExpenses = expensesData.reduce(
+      (sum, expense) => sum + expense.amount,
+      0,
+    );
     const netProfit = totalIncome - totalExpenses;
 
     return {
@@ -107,25 +127,32 @@ export class DashboardService {
 
   async getCarPerformance(startDate: string, endDate: string) {
     const cars = await this.carsService.findAll();
-    const expensesByCar = await this.expensesService.getExpensesByCarReport(startDate, endDate);
-    
+    const expensesByCar = await this.expensesService.getExpensesByCarReport(
+      startDate,
+      endDate,
+    );
+
     // Mock sales data for cars
-    const mockSalesData = cars.map(car => ({
+    const mockSalesData = cars.map((car) => ({
       carId: (car as any)._id,
       plateNumber: car.plateNumber,
       model: car.model,
       sales: Math.floor(Math.random() * 5000) + 1000, // Random sales between 1000-6000
     }));
 
-    return cars.map(car => {
-      const carExpenses = expensesByCar.find(exp => exp._id.toString() === (car as any)._id.toString());
-      const carSales = mockSalesData.find(sale => sale.carId.toString() === (car as any)._id.toString());
-      
+    return cars.map((car) => {
+      const carExpenses = expensesByCar.find(
+        (exp) => exp._id.toString() === (car as any)._id.toString(),
+      );
+      const carSales = mockSalesData.find(
+        (sale) => sale.carId.toString() === (car as any)._id.toString(),
+      );
+
       return {
         carId: (car as any)._id,
         plateNumber: car.plateNumber,
         model: car.model,
-        driver: car.driverId,
+        driver: car.driver,
         sales: carSales?.sales || 0,
         expenses: carExpenses?.total || 0,
         profit: (carSales?.sales || 0) - (carExpenses?.total || 0),
@@ -141,14 +168,18 @@ export class DashboardService {
       this.expensesService.getMonthlyExpenseTrend(startDate, endDate),
     ]);
 
-    const totalExpenses = expensesByType.reduce((sum, item) => sum + item.total, 0);
+    const totalExpenses = expensesByType.reduce(
+      (sum, item) => sum + item.total,
+      0,
+    );
 
     return {
       totalExpenses,
       expensesByType,
       expensesByCar,
       monthlyTrend,
-      averageDailyExpense: totalExpenses / this.getDaysBetween(startDate, endDate),
+      averageDailyExpense:
+        totalExpenses / this.getDaysBetween(startDate, endDate),
     };
   }
 

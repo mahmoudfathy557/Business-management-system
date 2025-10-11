@@ -34,7 +34,7 @@ export class CreateCarDto {
     (object, value) => value !== null && value !== undefined && value !== '',
   )
   @IsMongoId()
-  driverId?: string | null;
+  driver?: string | null;
 }
 
 export class UpdateCarDto {
@@ -57,7 +57,7 @@ export class UpdateCarDto {
     (object, value) => value !== null && value !== undefined && value !== '',
   )
   @IsMongoId()
-  driverId?: string | null;
+  driver?: string | null;
 
   @IsOptional()
   isActive?: boolean;
@@ -94,7 +94,7 @@ export class DailyRecordDto {
 
   @IsString()
   @IsNotEmpty()
-  driverId: string;
+  driver: string;
 
   @IsDateString()
   @IsNotEmpty()

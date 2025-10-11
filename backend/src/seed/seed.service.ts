@@ -16,7 +16,7 @@ export class SeedService {
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
     @InjectModel(Car.name) private carModel: Model<CarDocument>,
     @InjectModel(Expense.name) private expenseModel: Model<ExpenseDocument>,
-  ) { }
+  ) {}
 
   async seedDatabase() {
     console.log('🌱 Starting database seeding...');
@@ -284,15 +284,15 @@ export class SeedService {
   }
 
   private async seedCars(users: UserDocument[]) {
-    const admin = users.find(u => u.role === UserRole.ADMIN);
-    const drivers = users.filter(u => u.role === UserRole.DRIVER);
+    const admin = users.find((u) => u.role === UserRole.ADMIN);
+    const drivers = users.filter((u) => u.role === UserRole.DRIVER);
 
     const cars = [
       {
         plateNumber: 'ABC-1234',
         model: 'Toyota Camry',
         year: 2022,
-        driverId: drivers[0]._id,
+        driver: drivers[0]._id,
         assignedProducts: [],
         isActive: true,
       },
@@ -300,7 +300,7 @@ export class SeedService {
         plateNumber: 'XYZ-5678',
         model: 'Honda Civic',
         year: 2023,
-        driverId: drivers[1]._id,
+        driver: drivers[1]._id,
         assignedProducts: [],
         isActive: true,
       },
@@ -308,7 +308,7 @@ export class SeedService {
         plateNumber: 'DEF-9012',
         model: 'Nissan Altima',
         year: 2021,
-        driverId: drivers[2]._id,
+        driver: drivers[2]._id,
         assignedProducts: [],
         isActive: true,
       },
@@ -325,14 +325,14 @@ export class SeedService {
   }
 
   private async seedExpenses(cars: CarDocument[], users: UserDocument[]) {
-    const admin = users.find(u => u.role === UserRole.ADMIN);
-    const drivers = users.filter(u => u.role === UserRole.DRIVER);
+    const admin = users.find((u) => u.role === UserRole.ADMIN);
+    const drivers = users.filter((u) => u.role === UserRole.DRIVER);
 
     const expenses = [
       // Fuel expenses
       {
         type: ExpenseType.FUEL,
-        amount: 45.50,
+        amount: 45.5,
         description: 'Gas station fill-up',
         carId: cars[0]._id,
         date: new Date('2024-01-15'),
@@ -340,7 +340,7 @@ export class SeedService {
       },
       {
         type: ExpenseType.FUEL,
-        amount: 52.30,
+        amount: 52.3,
         description: 'Gas station fill-up',
         carId: cars[1]._id,
         date: new Date('2024-01-16'),
@@ -358,7 +358,7 @@ export class SeedService {
       // Maintenance expenses
       {
         type: ExpenseType.MAINTENANCE,
-        amount: 120.00,
+        amount: 120.0,
         description: 'Oil change and filter replacement',
         carId: cars[0]._id,
         date: new Date('2024-01-10'),
@@ -366,7 +366,7 @@ export class SeedService {
       },
       {
         type: ExpenseType.MAINTENANCE,
-        amount: 85.50,
+        amount: 85.5,
         description: 'Brake pad replacement',
         carId: cars[1]._id,
         date: new Date('2024-01-12'),
@@ -374,7 +374,7 @@ export class SeedService {
       },
       {
         type: ExpenseType.MAINTENANCE,
-        amount: 200.00,
+        amount: 200.0,
         description: 'Tire replacement (2 tires)',
         carId: cars[2]._id,
         date: new Date('2024-01-14'),
@@ -384,28 +384,28 @@ export class SeedService {
       // Salary expenses
       {
         type: ExpenseType.SALARY,
-        amount: 2500.00,
+        amount: 2500.0,
         description: 'Monthly salary - Mike Driver',
         date: new Date('2024-01-01'),
         createdBy: admin!._id,
       },
       {
         type: ExpenseType.SALARY,
-        amount: 2500.00,
+        amount: 2500.0,
         description: 'Monthly salary - Lisa Driver',
         date: new Date('2024-01-01'),
         createdBy: admin!._id,
       },
       {
         type: ExpenseType.SALARY,
-        amount: 2500.00,
+        amount: 2500.0,
         description: 'Monthly salary - Tom Driver',
         date: new Date('2024-01-01'),
         createdBy: admin!._id,
       },
       {
         type: ExpenseType.SALARY,
-        amount: 4000.00,
+        amount: 4000.0,
         description: 'Monthly salary - Sarah Inventory Manager',
         date: new Date('2024-01-01'),
         createdBy: admin!._id,
@@ -414,21 +414,21 @@ export class SeedService {
       // Other expenses
       {
         type: ExpenseType.OTHER,
-        amount: 150.00,
+        amount: 150.0,
         description: 'Office supplies and equipment',
         date: new Date('2024-01-05'),
         createdBy: admin!._id,
       },
       {
         type: ExpenseType.OTHER,
-        amount: 75.00,
+        amount: 75.0,
         description: 'Marketing materials',
         date: new Date('2024-01-08'),
         createdBy: admin!._id,
       },
       {
         type: ExpenseType.OTHER,
-        amount: 300.00,
+        amount: 300.0,
         description: 'Insurance premium',
         date: new Date('2024-01-01'),
         createdBy: admin!._id,
@@ -446,7 +446,7 @@ export class SeedService {
     for (const car of cars) {
       const randomProducts = this.getRandomProducts(products, 3, 8);
 
-      car.assignedProducts = randomProducts.map(product => ({
+      car.assignedProducts = randomProducts.map((product) => ({
         productId: product._id as any,
         quantity: Math.floor(Math.random() * 10) + 1,
         assignedAt: new Date(),
@@ -458,7 +458,11 @@ export class SeedService {
     console.log('✅ Assigned products to cars');
   }
 
-  private getRandomProducts(products: ProductDocument[], min: number, max: number) {
+  private getRandomProducts(
+    products: ProductDocument[],
+    min: number,
+    max: number,
+  ) {
     const count = Math.floor(Math.random() * (max - min + 1)) + min;
     const shuffled = [...products].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);

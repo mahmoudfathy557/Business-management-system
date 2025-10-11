@@ -18,8 +18,9 @@ const CarForm: React.FC<CarFormProps> = ({ initialValues, onSubmit, isEdit = fal
         plateNumber: initialValues?.plateNumber || '',
         model: initialValues?.model || '',
         year: initialValues?.year || new Date().getFullYear(),
-        driverId: (initialValues as Car)?.driver?._id || initialValues?.driverId || null,
+        driver: initialValues?.driver || null,
     });
+    console.log("🚀 ~ CarForm ~ formData:", formData)
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const validateForm = (): boolean => {
@@ -82,8 +83,8 @@ const CarForm: React.FC<CarFormProps> = ({ initialValues, onSubmit, isEdit = fal
             <View style={styles.pickerContainer}>
                 <Text style={styles.pickerLabel}>Assign Driver (Optional)</Text>
                 <Picker
-                    selectedValue={formData.driverId}
-                    onValueChange={(itemValue) => handleInputChange('driverId', itemValue)}
+                    selectedValue={(formData.driver as User)?._id || ''}
+                    onValueChange={(itemValue) => handleInputChange('driver', itemValue)}
                     style={styles.picker}
                 >
                     <Picker.Item label="No Driver" value='' />

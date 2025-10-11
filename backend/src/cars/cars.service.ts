@@ -186,7 +186,7 @@ export class CarsService {
       ...dailyRecordDto,
       date: new Date(dailyRecordDto.date), // Convert date string to Date object
       carId: new Types.ObjectId(dailyRecordDto.carId),
-      driverId: new Types.ObjectId(dailyRecordDto.driverId),
+      driverId: new Types.ObjectId(dailyRecordDto.driver),
       sales: dailyRecordDto.sales.map((saleItem) => ({
         ...saleItem,
         productId: new Types.ObjectId(saleItem.productId),

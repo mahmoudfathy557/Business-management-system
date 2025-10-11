@@ -110,5 +110,5 @@ export class StockMovementDto {
 
   @IsOptional()
   @IsString()
-  driverId?: string;
+  driver?: string;
 }
