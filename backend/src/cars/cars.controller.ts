@@ -141,10 +141,10 @@ export class CarsController {
     description: 'Forbidden - Admin or Inventory Manager role required',
   })
   assignProduct(
-    @Param('id') carId: string,
+    @Param('id') car: string,
     @Body() assignProductDto: AssignProductDto,
   ) {
-    return this.carsService.assignProduct(carId, assignProductDto);
+    return this.carsService.assignProduct(car, assignProductDto);
   }
 
   @Delete(':id/products/:productId')
@@ -159,10 +159,10 @@ export class CarsController {
     description: 'Forbidden - Admin or Inventory Manager role required',
   })
   removeProduct(
-    @Param('id') carId: string,
+    @Param('id') car: string,
     @Param('productId') productId: string,
   ) {
-    return this.carsService.removeProduct(carId, productId);
+    return this.carsService.removeProduct(car, productId);
   }
 
   @Patch(':id/products/:productId/quantity')
@@ -183,11 +183,11 @@ export class CarsController {
     description: 'Forbidden - Admin or Inventory Manager role required',
   })
   updateProductQuantity(
-    @Param('id') carId: string,
+    @Param('id') car: string,
     @Param('productId') productId: string,
     @Body('quantity') quantity: number,
   ) {
-    return this.carsService.updateProductQuantity(carId, productId, quantity);
+    return this.carsService.updateProductQuantity(car, productId, quantity);
   }
 
   @Post('daily-record')

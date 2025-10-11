@@ -12,24 +12,24 @@ const CarInventoryScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const route = useRoute();
-    const { carId } = route.params as { carId: string };
+    const { car } = route.params as { car: string };
 
-    const { selectedCar: car, isLoading } = useSelector((state: RootState) => state.cars);
+    const { selectedCar: selectedCar, isLoading } = useSelector((state: RootState) => state.cars);
     const { user } = useSelector((state: RootState) => state.auth);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        if (carId) {
-            dispatch(fetchCarById(carId));
+        if (car) {
+            dispatch(fetchCarById(car));
         }
-    }, [dispatch, carId]);
+    }, [dispatch, car]);
 
     const onRefresh = async () => {
         setRefreshing(true);
-        if (carId) {
-            await dispatch(fetchCarById(carId));
+        if (car) {
+            await dispatch(fetchCarById(car));
         }
         setRefreshing(false);
     };
@@ -37,14 +37,14 @@ const CarInventoryScreen: React.FC = () => {
     const handleRemoveProduct = (productId: string) => {
         Alert.alert(
             'Remove Product',
-            'Are you sure you want to remove this product from the car?',
+            'Are you sure you want to remove this product from the selectedCar?',
             [
                 { text: 'Cancel', style: 'cancel' },
                 {
                     text: 'Remove',
                     style: 'destructive',
                     onPress: () => {
-                        dispatch(removeProductFromCar({ carId, productId }));
+                        dispatch(removeProductFromCar({ carId:car, productId }));
                     },
                 },
             ]
@@ -68,15 +68,15 @@ const CarInventoryScreen: React.FC = () => {
 
     const renderHeader = () => (
         <View style={styles.headerContainer}>
-            <Title>{car?.model} - {car?.plateNumber}</Title>
-            <Paragraph>Driver: {car?.driver?.name || 'Unassigned'}</Paragraph>
+            <Title>{selectedCar?.model} - {selectedCar?.plateNumber}</Title>
+            <Paragraph>Driver: {selectedCar?.driver?.name || 'Unassigned'}</Paragraph>
         </View>
     );
 
     return (
         <View style={styles.container}>
             <FlatList
-                data={car?.assignedProducts || []}
+                data={selectedCar?.assignedProducts || []}
                 renderItem={renderProduct}
                 keyExtractor={(item) => item.productId._id }
                 ListHeaderComponent={renderHeader}
@@ -89,7 +89,7 @@ const CarInventoryScreen: React.FC = () => {
             <AddToInventoryModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
-                carId={carId}
+                car={car}
             />
 
             {user?.role === 'admin' && (

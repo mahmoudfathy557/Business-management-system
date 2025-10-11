@@ -106,7 +106,7 @@ export class StockMovementDto {
 
   @IsOptional()
   @IsString()
-  carId?: string;
+  car?: string;
 
   @IsOptional()
   @IsString()

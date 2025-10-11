@@ -165,10 +165,10 @@ export class TestService {
     for (const car of cars) {
       const [totalExpenses, dailyRecords] = await Promise.all([
         this.expenseModel.aggregate([
-          { $match: { carId: car._id } },
+          { $match: { car: car._id } },
           { $group: { _id: null, total: { $sum: '$amount' } } },
         ]),
-        this.dailyRecordModel.find({ carId: car._id }).lean(),
+        this.dailyRecordModel.find({ car: car._id }).lean(),
       ]);
 
       const totalSales = dailyRecords.reduce(
@@ -214,14 +214,14 @@ export class TestService {
     return this.expenseModel
       .find()
       .populate('userId', 'name email role')
-      .populate('carId', 'plateNumber model')
+      .populate('car', 'plateNumber model')
       .lean();
   }
 
   private async getDailyRecordsWithRelations() {
     return this.dailyRecordModel
       .find()
-      .populate('carId', 'plateNumber model')
+      .populate('car', 'plateNumber model')
       .populate('driver', 'name email')
       .populate('sales.productId', 'name category price')
       .lean();
@@ -245,7 +245,7 @@ export class TestService {
 
     // Car-Product assignments
     const carProductAssignments = cars.map((car) => ({
-      carId: car._id,
+      car: car._id,
       plateNumber: car.plateNumber,
       assignedProducts: car.assignedProducts || [],
       totalProductsAssigned: (car.assignedProducts || []).length,
@@ -264,8 +264,8 @@ export class TestService {
       type: expense.type,
       userId: expense.userId?._id,
       userName: expense.userId?.name,
-      carId: expense.carId?._id,
-      carPlate: expense.carId?.plateNumber,
+      car: expense.car?._id,
+      carPlate: expense.car?.plateNumber,
       date: expense.date,
     }));
 
@@ -273,8 +273,8 @@ export class TestService {
     const dailyRecordRelations = dailyRecords.map((record) => ({
       recordId: record._id,
       date: record.date,
-      carId: record.carId?._id,
-      carPlate: record.carId?.plateNumber,
+      car: record.car?._id,
+      carPlate: record.car?.plateNumber,
       driver: record.driver?._id,
       driverName: record.driver?.name,
       totalSales: record.totalSales,
@@ -309,7 +309,7 @@ export class TestService {
       // Check for orphaned expenses (expenses without valid user or car)
       const orphanedExpenses = await this.expenseModel
         .find({
-          $or: [{ userId: { $exists: false } }, { carId: { $exists: false } }],
+          $or: [{ userId: { $exists: false } }, { car: { $exists: false } }],
         })
         .lean();
 
@@ -354,7 +354,7 @@ export class TestService {
       // Check for daily records without valid car or driver
       const invalidDailyRecords = await this.dailyRecordModel
         .find({
-          $or: [{ carId: { $exists: false } }, { driver: { $exists: false } }],
+          $or: [{ car: { $exists: false } }, { driver: { $exists: false } }],
         })
         .lean();
 
@@ -400,7 +400,7 @@ export class TestService {
       const topPerformingCars = await this.dailyRecordModel.aggregate([
         {
           $group: {
-            _id: '$carId',
+            _id: '$car',
             totalSales: { $sum: '$totalSales' },
             totalExpenses: { $sum: '$totalExpenses' },
             recordCount: { $sum: 1 },
@@ -573,10 +573,10 @@ export class TestService {
         this.productModel.countDocuments({ currentStock: { $gte: 0 } }),
         this.expenseModel.countDocuments({
           userId: { $exists: true },
-          carId: { $exists: true },
+          car: { $exists: true },
         }),
         this.dailyRecordModel.countDocuments({
-          carId: { $exists: true },
+          car: { $exists: true },
           driver: { $exists: true },
         }),
       ]);

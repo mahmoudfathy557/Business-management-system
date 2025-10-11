@@ -13,22 +13,22 @@ const CarDetailsScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const route = useRoute<CarDetailsRouteProp>();
-    const { carId } = route.params;
+    const { car } = route.params;
 
     const { cars, isLoading } = useSelector((state: RootState) => state.cars);
     const { user } = useSelector((state: RootState) => state.auth);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const car = cars.find(c => c._id === carId);
+    const selectedCar = cars.find(c => c._id === car);
 
     useEffect(() => {
-        if (!car && !isLoading) {
+        if (!selectedCar && !isLoading) {
             dispatch(fetchCars());
         }
-    }, [car, dispatch, isLoading]);
+    }, [selectedCar, dispatch, isLoading]);
 
     const handleEdit = () => {
-        (navigation as any).navigate('EditCar', { carId });
+        (navigation as any).navigate('EditCar', { car });
     };
 
     const handleDelete = () => {
@@ -43,7 +43,7 @@ const CarDetailsScreen: React.FC = () => {
                     onPress: async () => {
                         setIsDeleting(true);
                         try {
-                            await dispatch(deleteCar(carId)).unwrap();
+                            await dispatch(deleteCar(car)).unwrap();
                             Alert.alert('Success', 'Car deleted successfully', [
                                 { text: 'OK', onPress: () => navigation.goBack() }
                             ]);
@@ -75,7 +75,7 @@ const CarDetailsScreen: React.FC = () => {
         );
     }
 
-    if (!car) {
+    if (!selectedCar) {
         return (
             <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>Car not found</Text>
@@ -92,9 +92,9 @@ const CarDetailsScreen: React.FC = () => {
                 <Card style={styles.card}>
                     <Card.Content>
                         <View style={styles.header}>
-                            <Title style={styles.title}>{`${car.year} ${car.model}`}</Title>
+                            <Title style={styles.title}>{`${selectedCar.year} ${selectedCar.model}`}</Title>
                             <Chip mode="outlined" style={styles.statusChip}>
-                                {car.plateNumber}
+                                {selectedCar.plateNumber}
                             </Chip>
                         </View>
 
@@ -104,19 +104,19 @@ const CarDetailsScreen: React.FC = () => {
                             <Text style={styles.sectionTitle}>Car Information</Text>
                             <View style={styles.infoRow}>
                                 <Text style={styles.label}>Plate Number:</Text>
-                                <Text style={styles.value}>{car.plateNumber}</Text>
+                                <Text style={styles.value}>{selectedCar.plateNumber}</Text>
                             </View>
                             <View style={styles.infoRow}>
                                 <Text style={styles.label}>Model:</Text>
-                                <Text style={styles.value}>{car.model}</Text>
+                                <Text style={styles.value}>{selectedCar.model}</Text>
                             </View>
                             <View style={styles.infoRow}>
                                 <Text style={styles.label}>Year:</Text>
-                                <Text style={styles.value}>{car.year}</Text>
+                                <Text style={styles.value}>{selectedCar.year}</Text>
                             </View>
                             <View style={styles.infoRow}>
                                 <Text style={styles.label}>Driver:</Text>
-                                <Text style={styles.value}>{car.driver?.name || 'Not Assigned'}</Text>
+                                <Text style={styles.value}>{selectedCar.driver?.name || 'Not Assigned'}</Text>
                             </View>
                         </View>
 
@@ -124,11 +124,11 @@ const CarDetailsScreen: React.FC = () => {
                             <Text style={styles.sectionTitle}>Timestamps</Text>
                             <View style={styles.infoRow}>
                                 <Text style={styles.label}>Created:</Text>
-                                <Text style={styles.value}>{formatDate(car.createdAt)}</Text>
+                                <Text style={styles.value}>{formatDate(selectedCar.createdAt)}</Text>
                             </View>
                             <View style={styles.infoRow}>
                                 <Text style={styles.label}>Last Updated:</Text>
-                                <Text style={styles.value}>{formatDate(car.updatedAt)}</Text>
+                                <Text style={styles.value}>{formatDate(selectedCar.updatedAt)}</Text>
                             </View>
                         </View>
                     </Card.Content>

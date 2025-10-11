@@ -20,7 +20,7 @@ export class Expense {
   description: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Car' })
-  carId?: Types.ObjectId;
+  car?: Types.ObjectId;
 
   @Prop({ required: true, default: Date.now })
   date: Date;

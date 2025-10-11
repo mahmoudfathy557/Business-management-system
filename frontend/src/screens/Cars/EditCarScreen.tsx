@@ -15,12 +15,12 @@ const EditCarScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
     const route = useRoute<EditCarRouteProp>();
-    const carId = route.params?.carId;
+    const car = route.params?.car;
 
-    if (!carId) {
+    if (!car) {
         return (
             <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>Car ID is missing. Cannot edit car.</Text>
+                <Text style={styles.errorText}>Car ID is missing. Cannot edit selectedCar.</Text>
                 <Button mode="contained" onPress={() => navigation.goBack()}>
                     Go Back
                 </Button>
@@ -33,24 +33,24 @@ const EditCarScreen: React.FC = () => {
     const drivers = allUsers.filter(user => user.role === UserRole.DRIVER);
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    const car = cars.find(c => c._id === carId);
+    const selectedCar = cars.find(c => c._id === car);
 
     useEffect(() => {
-        if (!car && !isLoading) {
+        if (!selectedCar && !isLoading) {
             dispatch(fetchCars());
         }
         dispatch(fetchUsers());
-    }, [car, dispatch, isLoading]);
+    }, [selectedCar, dispatch, isLoading]);
 
     const handleSubmit = async (formData: CarFormData) => {
         setIsSubmitting(true);
         try {
-            await dispatch(updateCar({ id: carId, data: formData })).unwrap();
+            await dispatch(updateCar({ id: car, data: formData })).unwrap();
             Alert.alert('Success', 'Car updated successfully', [
                 { text: 'OK', onPress: () => navigation.goBack() }
             ]);
         } catch (error: any) {
-            Alert.alert('Error', error.message || 'Failed to update car');
+            Alert.alert('Error', error.message || 'Failed to update selectedCar');
         } finally {
             setIsSubmitting(false);
         }
@@ -60,12 +60,12 @@ const EditCarScreen: React.FC = () => {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" />
-                <Text style={styles.loadingText}>Loading car...</Text>
+                <Text style={styles.loadingText}>Loading selectedCar...</Text>
             </View>
         );
     }
 
-    if (!car) {
+    if (!selectedCar) {
         return (
             <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>Car not found</Text>
@@ -81,13 +81,13 @@ const EditCarScreen: React.FC = () => {
             <Card style={styles.card}>
                 <Card.Content>
                     <Title style={styles.title}>Edit Car</Title>
-                    <Text style={styles.subtitle}>Update the car information below</Text>
+                    <Text style={styles.subtitle}>Update the selectedCar information below</Text>
                     
                     <Divider style={styles.divider} />
 
                     <CarForm 
                         onSubmit={handleSubmit} 
-                        initialValues={car}
+                        initialValues={selectedCar}
                         isEdit 
                         isLoading={isSubmitting || isUsersLoading} 
                         drivers={drivers}

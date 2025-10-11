@@ -185,7 +185,7 @@ export class CarsService {
     const dailyRecord = new this.dailyRecordModel({
       ...dailyRecordDto,
       date: new Date(dailyRecordDto.date), // Convert date string to Date object
-      carId: new Types.ObjectId(dailyRecordDto.carId),
+      car: new Types.ObjectId(dailyRecordDto.car),
       driverId: new Types.ObjectId(dailyRecordDto.driver),
       sales: dailyRecordDto.sales.map((saleItem) => ({
         ...saleItem,

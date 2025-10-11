@@ -24,7 +24,7 @@ export class CreateExpenseDto {
 
   @IsOptional()
   @IsString()
-  carId?: string;
+  car?: string;
 
   @IsDateString()
   date: string;
@@ -46,7 +46,7 @@ export class UpdateExpenseDto {
 
   @IsOptional()
   @IsString()
-  carId?: string;
+  car?: string;
 
   @IsOptional()
   @IsDateString()
@@ -62,7 +62,7 @@ export class ExpenseReportDto {
 
   @IsOptional()
   @IsString()
-  carId?: string;
+  car?: string;
 
   @IsOptional()
   @IsEnum(ExpenseType)

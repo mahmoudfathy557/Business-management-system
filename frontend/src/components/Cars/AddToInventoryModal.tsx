@@ -10,10 +10,10 @@ import { Product } from '../../types';
 interface Props {
     visible: boolean;
     onClose: () => void;
-    carId: string;
+    car: string;
 }
 
-const AddToInventoryModal: React.FC<Props> = ({ visible, onClose, carId }) => {
+const AddToInventoryModal: React.FC<Props> = ({ visible, onClose, car }) => {
     const dispatch = useDispatch<AppDispatch>();
     const { products } = useSelector((state: RootState) => state.products);
     const [selectedProducts, setSelectedProducts] = useState<Record<string, number>>({});
@@ -49,7 +49,7 @@ const AddToInventoryModal: React.FC<Props> = ({ visible, onClose, carId }) => {
             productId,
             quantity: selectedProducts[productId],
         }));
-        dispatch(assignProductToCar({ carId, data: { products } }));
+        dispatch(assignProductToCar({ carId:car, data: { products } }));
         onClose();
     };
 

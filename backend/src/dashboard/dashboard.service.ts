@@ -60,14 +60,14 @@ export class DashboardService {
     };
   }
 
-  async getSalesReport(startDate: string, endDate: string, carId?: string) {
+  async getSalesReport(startDate: string, endDate: string, car?: string) {
     // Mock sales data - in a real app, this would come from actual sales records
     const mockSalesData = [
-      { date: '2024-01-01', amount: 1200, carId: carId || 'car1' },
-      { date: '2024-01-02', amount: 1500, carId: carId || 'car2' },
-      { date: '2024-01-03', amount: 1800, carId: carId || 'car1' },
-      { date: '2024-01-04', amount: 1400, carId: carId || 'car3' },
-      { date: '2024-01-05', amount: 2000, carId: carId || 'car2' },
+      { date: '2024-01-01', amount: 1200, car: car || 'car1' },
+      { date: '2024-01-02', amount: 1500, car: car || 'car2' },
+      { date: '2024-01-03', amount: 1800, car: car || 'car1' },
+      { date: '2024-01-04', amount: 1400, car: car || 'car3' },
+      { date: '2024-01-05', amount: 2000, car: car || 'car2' },
     ];
 
     return {
@@ -79,18 +79,14 @@ export class DashboardService {
     };
   }
 
-  async getExpenseReport(startDate: string, endDate: string, carId?: string) {
-    return this.expensesService.getExpensesByDateRange(
-      startDate,
-      endDate,
-      carId,
-    );
+  async getExpenseReport(startDate: string, endDate: string, car?: string) {
+    return this.expensesService.getExpensesByDateRange(startDate, endDate, car);
   }
 
-  async getProfitReport(startDate: string, endDate: string, carId?: string) {
+  async getProfitReport(startDate: string, endDate: string, car?: string) {
     const [salesData, expensesData] = await Promise.all([
-      this.getSalesReport(startDate, endDate, carId),
-      this.expensesService.getExpensesByDateRange(startDate, endDate, carId),
+      this.getSalesReport(startDate, endDate, car),
+      this.expensesService.getExpensesByDateRange(startDate, endDate, car),
     ]);
 
     const totalIncome = salesData.total;
@@ -134,7 +130,7 @@ export class DashboardService {
 
     // Mock sales data for cars
     const mockSalesData = cars.map((car) => ({
-      carId: (car as any)._id,
+      car: (car as any)._id,
       plateNumber: car.plateNumber,
       model: car.model,
       sales: Math.floor(Math.random() * 5000) + 1000, // Random sales between 1000-6000
@@ -145,11 +141,11 @@ export class DashboardService {
         (exp) => exp._id.toString() === (car as any)._id.toString(),
       );
       const carSales = mockSalesData.find(
-        (sale) => sale.carId.toString() === (car as any)._id.toString(),
+        (sale) => sale.car.toString() === (car as any)._id.toString(),
       );
 
       return {
-        carId: (car as any)._id,
+        car: (car as any)._id,
         plateNumber: car.plateNumber,
         model: car.model,
         driver: car.driver,

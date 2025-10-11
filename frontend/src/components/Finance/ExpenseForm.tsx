@@ -66,11 +66,11 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ expense, onPress }) => {
                         </Paragraph>
                     </View>
 
-                    {expense.carId && (
+                    {expense.car && (
                         <View style={styles.carContainer}>
                             <Paragraph style={styles.carLabel}>Car:</Paragraph>
-                            <Paragraph style={styles.carId}>
-                                {typeof expense.carId === 'string' ? expense.carId : expense.carId.plateNumber}
+                            <Paragraph style={styles.car}>
+                                {typeof expense.car === 'string' ? expense.car : expense.car.plateNumber}
                             </Paragraph>
                         </View>
                     )}
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#666',
     },
-    carId: {
+    car: {
         fontSize: 14,
         fontWeight: '500',
         color: '#2e7d32',

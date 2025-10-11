@@ -59,7 +59,7 @@ export interface StockMovement {
   type: "in" | "out";
   quantity: number;
   reason: string;
-  carId?: string;
+  car?: string;
   driver?: string;
   createdAt: string;
 }
@@ -93,7 +93,7 @@ export interface SaleItem {
 
 export interface DailyRecord {
   _id: string;
-  carId: string;
+  car: string;
   driver: string;
   date: string;
   totalSales: number;
@@ -109,7 +109,7 @@ export interface Expense {
   type: ExpenseType;
   amount: number;
   description: string;
-  carId?:
+  car?:
     | string
     | {
         _id: string;
@@ -140,7 +140,7 @@ export enum ExpenseType {
 
 export interface Income {
   _id: string;
-  carId: string;
+  car: string;
   amount: number;
   date: string;
   createdAt: string;
@@ -183,11 +183,11 @@ export type RootStackParamList = {
   Users: undefined;
   Settings: undefined;
   ProductDetails: { productId: string };
-  CarDetails: { carId: string };
+  CarDetails: { car: string };
   AddProduct: undefined;
   EditProduct: { productId: string };
   AddCar: undefined;
-  EditCar: { carId: string };
+  EditCar: { car: string };
   AddExpense: undefined;
   EditExpense: { expenseId: string };
   AddUser: undefined;
@@ -218,7 +218,7 @@ export interface ExpenseFormData {
   type: ExpenseType;
   amount: number;
   description: string;
-  carId?: string;
+  car?: string;
   date: string;
 }
 

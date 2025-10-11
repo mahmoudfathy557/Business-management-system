@@ -34,7 +34,7 @@ const CarsScreen: React.FC = () => {
         car.driver?.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleDeleteCar = (carId: string) => {
+    const handleDeleteCar = (car: string) => {
         Alert.alert(
             'Delete Car',
             'Are you sure you want to delete this car?',
@@ -44,7 +44,7 @@ const CarsScreen: React.FC = () => {
                     text: 'Delete',
                     style: 'destructive',
                     onPress: () => {
-                        dispatch(deleteCar(carId));
+                        dispatch(deleteCar(car));
                     },
                 },
             ]
@@ -54,10 +54,10 @@ const CarsScreen: React.FC = () => {
     const renderCar = ({ item }: { item: Car }) => (
         <CarCard
             car={item}
-            onPress={() => (navigation as any).navigate('CarDetails' as never, { carId: item._id } as never)}
-            onEdit={() => (navigation as any).navigate('EditCar'as never, { carId: item._id } as never)}
+            onPress={() => (navigation as any).navigate('CarDetails' as never, { car: item._id } as never)}
+            onEdit={() => (navigation as any).navigate('EditCar'as never, { car: item._id } as never)}
             onDelete={() => handleDeleteCar(item._id)}
-            onNavigateToInventory={() => (navigation as any).navigate('CarInventory' as never, { carId: item._id } as never)}
+            onNavigateToInventory={() => (navigation as any).navigate('CarInventory' as never, { car: item._id } as never)}
             showActions={user?.role === 'admin'}
         />
     );

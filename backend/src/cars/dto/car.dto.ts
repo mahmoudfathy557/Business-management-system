@@ -90,7 +90,7 @@ export class SaleItemDto {
 export class DailyRecordDto {
   @IsString()
   @IsNotEmpty()
-  carId: string;
+  car: string;
 
   @IsString()
   @IsNotEmpty()

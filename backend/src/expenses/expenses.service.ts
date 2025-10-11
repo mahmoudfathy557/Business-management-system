@@ -2,15 +2,22 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Expense, ExpenseDocument } from './schemas/expense.schema';
-import { CreateExpenseDto, UpdateExpenseDto, ExpenseReportDto } from './dto/expense.dto';
+import {
+  CreateExpenseDto,
+  UpdateExpenseDto,
+  ExpenseReportDto,
+} from './dto/expense.dto';
 
 @Injectable()
 export class ExpensesService {
   constructor(
     @InjectModel(Expense.name) private expenseModel: Model<ExpenseDocument>,
-  ) { }
+  ) {}
 
-  async create(createExpenseDto: CreateExpenseDto, userId: string): Promise<Expense> {
+  async create(
+    createExpenseDto: CreateExpenseDto,
+    userId: string,
+  ): Promise<Expense> {
     const expense = new this.expenseModel({
       ...createExpenseDto,
       createdBy: new Types.ObjectId(userId),
@@ -37,12 +44,20 @@ export class ExpensesService {
     if (period) {
       switch (period) {
         case 'today':
-          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          startDate = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+          );
           break;
         case 'week':
           // Get the start of the current week (Sunday)
           const dayOfWeek = now.getDay();
-          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
+          startDate = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate() - dayOfWeek,
+          );
           break;
         case 'month':
           startDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -51,9 +66,9 @@ export class ExpensesService {
           startDate = new Date(now.getFullYear(), 0, 1);
           break;
         default:
-          // If period is not a recognized keyword, it might be a carId.
+          // If period is not a recognized keyword, it might be a car.
           // However, the frontend is sending 'today', 'week', etc. as 'period'.
-          // If a carId is needed, it should be a separate parameter.
+          // If a car is needed, it should be a separate parameter.
           // For now, we'll just log a warning for unrecognized periods.
           console.warn(`Unrecognized period provided: ${period}`);
           break;
@@ -71,7 +86,7 @@ export class ExpensesService {
     const [data, total] = await Promise.all([
       this.expenseModel
         .find(query)
-        .populate('carId', 'plateNumber model year')
+        .populate('car', 'plateNumber model year')
         .populate('createdBy', 'name email role')
         .sort({ date: -1 })
         .skip(skip)
@@ -92,7 +107,7 @@ export class ExpensesService {
   async findOne(id: string): Promise<Expense> {
     const expense = await this.expenseModel
       .findById(id)
-      .populate('carId', 'plateNumber model')
+      .populate('car', 'plateNumber model')
       .populate('createdBy', 'name email')
       .exec();
 
@@ -103,10 +118,13 @@ export class ExpensesService {
     return expense;
   }
 
-  async update(id: string, updateExpenseDto: UpdateExpenseDto): Promise<Expense> {
+  async update(
+    id: string,
+    updateExpenseDto: UpdateExpenseDto,
+  ): Promise<Expense> {
     const expense = await this.expenseModel
       .findByIdAndUpdate(id, updateExpenseDto, { new: true })
-      .populate('carId', 'plateNumber model')
+      .populate('car', 'plateNumber model')
       .populate('createdBy', 'name email')
       .exec();
 
@@ -127,7 +145,7 @@ export class ExpensesService {
   async getExpensesByDateRange(
     startDate: string,
     endDate: string,
-    carId?: string,
+    car?: string,
   ): Promise<Expense[]> {
     const query: any = {
       date: {
@@ -136,13 +154,13 @@ export class ExpensesService {
       },
     };
 
-    if (carId) {
-      query.carId = new Types.ObjectId(carId);
+    if (car) {
+      query.car = new Types.ObjectId(car);
     }
 
     return this.expenseModel
       .find(query)
-      .populate('carId', 'plateNumber model')
+      .populate('car', 'plateNumber model')
       .populate('createdBy', 'name email')
       .sort({ date: -1 })
       .exec();
@@ -164,7 +182,7 @@ export class ExpensesService {
 
     return this.expenseModel
       .find(query)
-      .populate('carId', 'plateNumber model')
+      .populate('car', 'plateNumber model')
       .populate('createdBy', 'name email')
       .sort({ date: -1 })
       .exec();
@@ -173,7 +191,7 @@ export class ExpensesService {
   async getTotalExpenses(
     startDate?: string,
     endDate?: string,
-    carId?: string,
+    car?: string,
   ): Promise<number> {
     const query: any = {};
 
@@ -184,8 +202,8 @@ export class ExpensesService {
       };
     }
 
-    if (carId) {
-      query.carId = new Types.ObjectId(carId);
+    if (car) {
+      query.car = new Types.ObjectId(car);
     }
 
     const result = await this.expenseModel.aggregate([
@@ -199,7 +217,7 @@ export class ExpensesService {
   async getExpensesByTypeReport(
     startDate: string,
     endDate: string,
-    carId?: string,
+    car?: string,
   ): Promise<any[]> {
     const matchQuery: any = {
       date: {
@@ -208,8 +226,8 @@ export class ExpensesService {
       },
     };
 
-    if (carId) {
-      matchQuery.carId = new Types.ObjectId(carId);
+    if (car) {
+      matchQuery.car = new Types.ObjectId(car);
     }
 
     return this.expenseModel.aggregate([
@@ -236,13 +254,13 @@ export class ExpensesService {
             $gte: new Date(startDate),
             $lte: new Date(endDate),
           },
-          carId: { $exists: true },
+          car: { $exists: true },
         },
       },
       {
         $lookup: {
           from: 'cars',
-          localField: 'carId',
+          localField: 'car',
           foreignField: '_id',
           as: 'car',
         },
@@ -250,7 +268,7 @@ export class ExpensesService {
       { $unwind: '$car' },
       {
         $group: {
-          _id: '$carId',
+          _id: '$car',
           carPlateNumber: { $first: '$car.plateNumber' },
           carModel: { $first: '$car.model' },
           total: { $sum: '$amount' },
@@ -264,7 +282,7 @@ export class ExpensesService {
   async getMonthlyExpenseTrend(
     startDate: string,
     endDate: string,
-    carId?: string,
+    car?: string,
   ): Promise<any[]> {
     const matchQuery: any = {
       date: {
@@ -273,8 +291,8 @@ export class ExpensesService {
       },
     };
 
-    if (carId) {
-      matchQuery.carId = new Types.ObjectId(carId);
+    if (car) {
+      matchQuery.car = new Types.ObjectId(car);
     }
 
     return this.expenseModel.aggregate([

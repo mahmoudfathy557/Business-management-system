@@ -16,7 +16,7 @@ export class SaleItem {
 @Schema({ timestamps: true })
 export class DailyRecord {
   @Prop({ type: Types.ObjectId, ref: 'Car', required: true })
-  carId: Types.ObjectId;
+  car: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   driver: Types.ObjectId;
