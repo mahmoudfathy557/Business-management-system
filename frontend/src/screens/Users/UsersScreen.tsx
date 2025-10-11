@@ -52,8 +52,7 @@ const UsersScreen: React.FC = () => {
     const renderUser = ({ item }: { item: User }) => (
         <UserCard
             user={item}
-            onPress={() => (navigation as any).navigate('UserDetails' as never, { userId: item._id } as never)}
-            onEdit={() => (navigation as any).navigate('EditUser' as never, { userId: item._id } as never)}
+            onPress={(userId) => (navigation as any).navigate('SaveUser', { userId })}
             onDelete={() => handleDeleteUser(item._id)}
             showActions={user?.role === UserRole.ADMIN || user?.role === UserRole.SUPER_ADMIN}
         />
@@ -91,7 +90,7 @@ const UsersScreen: React.FC = () => {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    onPress={() => navigation.navigate('AddUser' as never)}
+                    onPress={() => navigation.navigate('SaveUser' as never)}
                 />
             )}
         </View>

@@ -60,7 +60,7 @@ const FinanceScreen: React.FC = () => {
             <FAB
                 style={styles.fab}
                 icon="plus"
-                onPress={() => navigation.navigate('AddExpense' as never)}
+                onPress={() => navigation.navigate('SaveExpense' as never)}
             />
         </View>
     );

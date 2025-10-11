@@ -68,7 +68,7 @@ const InventoryScreen: React.FC = () => {
         <ProductCard
             product={item}
             onPress={() => (navigation as any).navigate('ProductDetails', { productId: item._id })}
-            onEdit={() => (navigation as any).navigate('EditProduct', { productId: item._id })}
+            onEdit={() => (navigation as any).navigate('SaveProduct', { productId: item._id })}
             onDelete={() => handleDeleteProduct(item._id)}
             showActions={user?.role === 'admin' || user?.role === 'inventory_manager'}
         />
@@ -107,7 +107,7 @@ const InventoryScreen: React.FC = () => {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    onPress={() => navigation.navigate('AddProduct' as never)}
+                    onPress={() => navigation.navigate('SaveProduct' as never)}
                 />
             )}
         </View>

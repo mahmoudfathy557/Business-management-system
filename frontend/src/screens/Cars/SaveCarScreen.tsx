@@ -1,71 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
-import { Text, Card, Title, Button, Divider, ActivityIndicator } from 'react-native-paper';
+import { Text, Card, Title, Divider, ActivityIndicator, Button } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { updateCar, fetchCars } from '../../redux/slices/carsSlice';
+import { createCar, updateCar, fetchCars } from '../../redux/slices/carsSlice';
 import { fetchUsers } from '../../redux/slices/usersSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import { CarFormData, RootStackParamList, UserRole } from '../../types';
 import CarForm from '../../components/Cars/CarForm';
 
-type EditCarRouteProp = RouteProp<RootStackParamList, 'EditCar'>;
+type SaveCarRouteProp = RouteProp<RootStackParamList, 'SaveCar'>;
 
-const EditCarScreen: React.FC = () => {
+const SaveCarScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
-    const route = useRoute<EditCarRouteProp>();
-    const car = route.params?.car;
+    const route = useRoute<SaveCarRouteProp>();
+    const carId = route.params?.car; // carId can be undefined for AddCar
+    const isEdit = !!carId;
 
-    if (!car) {
-        return (
-            <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>Car ID is missing. Cannot edit selectedCar.</Text>
-                <Button mode="contained" onPress={() => navigation.goBack()}>
-                    Go Back
-                </Button>
-            </View>
-        );
-    }
-
-    const { cars, isLoading } = useSelector((state: RootState) => state.cars);
+    const { cars, isLoading: isCarsLoading } = useSelector((state: RootState) => state.cars);
     const { users: allUsers, isLoading: isUsersLoading } = useSelector((state: RootState) => state.users);
     const drivers = allUsers.filter(user => user.role === UserRole.DRIVER);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
-    const selectedCar = cars.find(c => c._id === car);
+
+    const selectedCar = cars.find(c => c._id === carId);
 
     useEffect(() => {
-        if (!selectedCar && !isLoading) {
+        if (isEdit && !selectedCar && !isCarsLoading) {
             dispatch(fetchCars());
         }
         dispatch(fetchUsers());
-    }, [selectedCar, dispatch, isLoading]);
+    }, [dispatch, isEdit, selectedCar, isCarsLoading]);
 
     const handleSubmit = async (formData: CarFormData) => {
         setIsSubmitting(true);
         try {
-            await dispatch(updateCar({ id: car, data: formData })).unwrap();
-            Alert.alert('Success', 'Car updated successfully', [
-                { text: 'OK', onPress: () => navigation.goBack() }
-            ]);
+            if (isEdit) {
+                await dispatch(updateCar({ id: carId, data: formData })).unwrap();
+                Alert.alert('Success', 'Car updated successfully');
+            } else {
+                await dispatch(createCar(formData)).unwrap();
+                Alert.alert('Success', 'Car created successfully');
+            }
+            navigation.goBack();
         } catch (error: any) {
-            Alert.alert('Error', error.message || 'Failed to update selectedCar');
+            Alert.alert('Error', error.message || `Failed to ${isEdit ? 'update' : 'create'} car`);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    if (isLoading) {
+    if (isCarsLoading && isEdit) {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" />
-                <Text style={styles.loadingText}>Loading selectedCar...</Text>
+                <Text style={styles.loadingText}>Loading car...</Text>
             </View>
         );
     }
 
-    if (!selectedCar) {
+    if (isEdit && !selectedCar) {
         return (
             <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>Car not found</Text>
@@ -80,15 +74,17 @@ const EditCarScreen: React.FC = () => {
         <ScrollView style={styles.container}>
             <Card style={styles.card}>
                 <Card.Content>
-                    <Title style={styles.title}>Edit Car</Title>
-                    <Text style={styles.subtitle}>Update the selectedCar information below</Text>
+                    <Title style={styles.title}>{isEdit ? 'Edit Car' : 'Add New Car'}</Title>
+                    <Text style={styles.subtitle}>
+                        {isEdit ? 'Update the car information below' : 'Fill in the details to add a new car'}
+                    </Text>
                     
                     <Divider style={styles.divider} />
 
                     <CarForm 
                         onSubmit={handleSubmit} 
                         initialValues={selectedCar}
-                        isEdit 
+                        isEdit={isEdit} 
                         isLoading={isSubmitting || isUsersLoading} 
                         drivers={drivers}
                     />
@@ -146,4 +142,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EditCarScreen;
+export default SaveCarScreen;

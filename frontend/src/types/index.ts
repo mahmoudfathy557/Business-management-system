@@ -184,14 +184,10 @@ export type RootStackParamList = {
   Settings: undefined;
   ProductDetails: { productId: string };
   CarDetails: { car: string };
-  AddProduct: undefined;
-  EditProduct: { productId: string };
-  AddCar: undefined;
-  EditCar: { car: string };
-  AddExpense: undefined;
-  EditExpense: { expenseId: string };
-  AddUser: undefined;
-  EditUser: { userId: string };
+  SaveProduct: { productId?: string };
+  SaveCar: { car?: string };
+  SaveExpense: { expenseId?: string };
+  SaveUser: { userId?: string };
   UserDetails: { userId: string };
 };
 

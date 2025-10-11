@@ -6,13 +6,12 @@ import { useNavigation } from '@react-navigation/native';
 
 interface UserCardProps {
     user: User;
-    onPress: () => void;
-    onEdit: () => void;
+    onPress: (userId: string) => void;
     onDelete: () => void;
     showActions: boolean;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, onPress, onEdit, onDelete, showActions }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, onPress, onDelete, showActions }) => {
     const navigation = useNavigation();
     const [menuVisible, setMenuVisible] = React.useState(false);
 
@@ -20,7 +19,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, onPress, onEdit, onDelete, sh
     const closeMenu = () => setMenuVisible(false);
 
     return (
-        <TouchableOpacity onPress={onPress} style={styles.touchable}>
+        <TouchableOpacity onPress={() => onPress(user._id)} style={styles.touchable}>
             <Card style={styles.card}>
                 <Card.Content>
                     <View style={styles.contentRow}>
@@ -35,7 +34,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, onPress, onEdit, onDelete, sh
                                 visible={menuVisible}
                                 onDismiss={closeMenu}
                                 anchor={<IconButton icon="dots-vertical" onPress={openMenu} />}>
-                                <Menu.Item onPress={() => { closeMenu(); onEdit(); }} title="Edit" />
+                                <Menu.Item onPress={() => { closeMenu(); onPress(user._id); }} title="Edit" />
                                 <Divider />
                                 <Menu.Item onPress={() => { closeMenu(); onDelete(); }} title="Delete" />
                             </Menu>

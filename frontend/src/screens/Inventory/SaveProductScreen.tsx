@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
-import { Text, Card, Title, Button, Divider } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { Text, Card, Title, Button, Divider, ActivityIndicator } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import FormInput from '../../components/FormInput';
-import { createProduct } from '../../redux/slices';
-import { AppDispatch } from '../../redux/store';
-import { ProductFormData } from '../../types';
+import { createProduct, updateProduct, fetchProducts } from '../../redux/slices';
+import { AppDispatch, RootState } from '../../redux/store';
+import { ProductFormData, RootStackParamList } from '../../types';
 
-const AddProductScreen: React.FC = () => {
+type SaveProductRouteProp = RouteProp<RootStackParamList, 'SaveProduct'>;
+
+const SaveProductScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
-    const [isLoading, setIsLoading] = useState(false);
+    const route = useRoute<SaveProductRouteProp>();
+    const productId = route.params?.productId;
+    const isEdit = !!productId;
+
+    const { products, isLoading: isProductsLoading } = useSelector((state: RootState) => state.products);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState<ProductFormData>({
         name: '',
         description: '',
@@ -23,6 +30,25 @@ const AddProductScreen: React.FC = () => {
         barcode: '',
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
+
+    const selectedProduct = products.find(p => p._id === productId);
+
+    useEffect(() => {
+        if (isEdit && selectedProduct) {
+            setFormData({
+                name: selectedProduct.name,
+                description: selectedProduct.description,
+                category: selectedProduct.category,
+                price: selectedProduct.price,
+                cost: selectedProduct.cost,
+                stockQuantity: selectedProduct.stockQuantity,
+                minStockLevel: selectedProduct.minStockLevel,
+                barcode: selectedProduct.barcode || '',
+            });
+        } else if (isEdit && !selectedProduct && !isProductsLoading) {
+            dispatch(fetchProducts({ page: 1, limit: 100 }));
+        }
+    }, [selectedProduct, dispatch, isProductsLoading, isEdit]);
 
     const validateForm = (): boolean => {
         const newErrors: Record<string, string> = {};
@@ -61,7 +87,6 @@ const AddProductScreen: React.FC = () => {
 
     const handleInputChange = (field: keyof ProductFormData, value: string | number) => {
         setFormData(prev => ({ ...prev, [field]: value }));
-        // Clear error when user starts typing
         if (errors[field]) {
             setErrors(prev => ({ ...prev, [field]: '' }));
         }
@@ -72,25 +97,53 @@ const AddProductScreen: React.FC = () => {
             return;
         }
 
-        setIsLoading(true);
+        setIsSubmitting(true);
         try {
-            await dispatch(createProduct(formData)).unwrap();
-            Alert.alert('Success', 'Product created successfully', [
-                { text: 'OK', onPress: () => navigation.goBack() }
-            ]);
+            if (isEdit) {
+                await dispatch(updateProduct({ id: productId, data: formData })).unwrap();
+                Alert.alert('Success', 'Product updated successfully');
+            } else {
+                await dispatch(createProduct(formData)).unwrap();
+                Alert.alert('Success', 'Product created successfully');
+            }
+            navigation.goBack();
         } catch (error: any) {
-            Alert.alert('Error', error.message || 'Failed to create product');
+            Alert.alert('Error', error.message || `Failed to ${isEdit ? 'update' : 'create'} product`);
         } finally {
-            setIsLoading(false);
+            setIsSubmitting(false);
         }
     };
+
+    if (isProductsLoading && isEdit) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" />
+                <Text style={styles.loadingText}>Loading product...</Text>
+            </View>
+        );
+    }
+
+    if (isEdit && !selectedProduct) {
+        return (
+            <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>Product not found</Text>
+                <Button mode="contained" onPress={() => navigation.goBack()}>
+                    Go Back
+                </Button>
+            </View>
+        );
+    }
 
     return (
         <ScrollView style={styles.container}>
             <Card style={styles.card}>
                 <Card.Content>
-                    <Title style={styles.title}>Add New Product</Title>
-                    <Text style={styles.subtitle}>Fill in the details to add a new product to inventory</Text>
+                    <Title style={styles.title}>{isEdit ? 'Edit Product' : 'Add New Product'}</Title>
+                    <Text style={styles.subtitle}>
+                        {isEdit 
+                            ? 'Update the product information below' 
+                            : 'Fill in the details to add a new product to inventory'}
+                    </Text>
                     
                     <Divider style={styles.divider} />
 
@@ -182,11 +235,11 @@ const AddProductScreen: React.FC = () => {
                         <Button
                             mode="contained"
                             onPress={handleSubmit}
-                            loading={isLoading}
-                            disabled={isLoading}
+                            loading={isSubmitting}
+                            disabled={isSubmitting}
                             style={styles.submitButton}
                         >
-                            Add Product
+                            {isEdit ? 'Update Product' : 'Add Product'}
                         </Button>
                     </View>
                 </Card.Content>
@@ -237,6 +290,30 @@ const styles = StyleSheet.create({
         flex: 1,
         marginLeft: 8,
     },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+    },
+    loadingText: {
+        marginTop: 16,
+        fontSize: 16,
+        color: '#666',
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+        padding: 16,
+    },
+    errorText: {
+        fontSize: 18,
+        color: '#c62828',
+        marginBottom: 16,
+        textAlign: 'center',
+    },
 });
 
-export default AddProductScreen;
+export default SaveProductScreen;

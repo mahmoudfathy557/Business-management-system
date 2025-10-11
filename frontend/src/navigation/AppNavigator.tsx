@@ -8,7 +8,7 @@ import { UserRole } from '../types';
 
 // Import screens
 import LoginScreen from '../screens/Login/LoginScreen';
- 
+
 import CarsScreen from '../screens/Cars/CarsScreen';
 import FinanceScreen from '../screens/Finance/FinanceScreen';
 import ReportsScreen from '../screens/Reports/ReportsScreen';
@@ -16,15 +16,11 @@ import UsersScreen from '../screens/Users/UsersScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
 import ProductDetailsScreen from '../screens/Inventory/ProductDetailsScreen';
 import CarDetailsScreen from '../screens/Cars/CarDetailsScreen';
-import AddProductScreen from '../screens/Inventory/AddProductScreen';
-import EditProductScreen from '../screens/Inventory/EditProductScreen';
-import AddCarScreen from '../screens/Cars/AddCarScreen';
-import EditCarScreen from '../screens/Cars/EditCarScreen';
+import SaveProductScreen from '../screens/Inventory/SaveProductScreen';
+import SaveCarScreen from '../screens/Cars/SaveCarScreen';
 import CarInventoryScreen from '../screens/Cars/CarInventoryScreen';
-import AddExpenseScreen from '../screens/Finance/AddExpenseScreen';
-import EditExpenseScreen from '../screens/Finance/EditExpenseScreen';
-import AddUserScreen from '../screens/Users/AddUserScreen';
-import EditUserScreen from '../screens/Users/EditUserScreen';
+import SaveExpenseScreen from '../screens/Finance/SaveExpenseScreen';
+import SaveUserScreen from '../screens/Users/SaveUserScreen';
 import UserDetailsScreen from '../screens/Users/UserDetailsScreen';
 
 // Import icons
@@ -161,25 +157,10 @@ const AppNavigator = () => {
                             }}
                         />
                         <Stack.Screen
-                            name="AddProduct"
-                            component={AddProductScreen}
+                            name="SaveProduct"
+                            component={SaveProductScreen}
                             options={{ 
-                                title: 'Add Product',
-                                headerShown: true,
-                                headerStyle: {
-                                    backgroundColor: '#6200ea',
-                                },
-                                headerTintColor: '#fff',
-                                headerTitleStyle: {
-                                    fontWeight: 'bold',
-                                },
-                            }}
-                        />
-                        <Stack.Screen
-                            name="EditProduct"
-                            component={EditProductScreen}
-                            options={{ 
-                                title: 'Edit Product',
+                                title: 'Save Product',
                                 headerShown: true,
                                 headerStyle: {
                                     backgroundColor: '#6200ea',
@@ -208,25 +189,10 @@ const AppNavigator = () => {
                             }}
                         />
                         <Stack.Screen
-                            name="AddCar"
-                            component={AddCarScreen}
-                            options={{ 
-                                title: 'Add Car',
-                                headerShown: true,
-                                headerStyle: {
-                                    backgroundColor: '#6200ea',
-                                },
-                                headerTintColor: '#fff',
-                                headerTitleStyle: {
-                                    fontWeight: 'bold',
-                                },
-                            }}
-                        />
-                        <Stack.Screen
-                            name="EditCar"
-                            component={EditCarScreen}
-                            options={{ 
-                                title: 'Edit Car',
+                            name="SaveCar"
+                            component={SaveCarScreen}
+                            options={{
+                                title: 'Save Car',
                                 headerShown: true,
                                 headerStyle: {
                                     backgroundColor: '#6200ea',
@@ -255,25 +221,10 @@ const AppNavigator = () => {
 
                         {/* Expense Screens */}
                         <Stack.Screen
-                            name="AddExpense"
-                            component={AddExpenseScreen}
-                            options={{ 
-                                title: 'Add Expense',
-                                headerShown: true,
-                                headerStyle: {
-                                    backgroundColor: '#6200ea',
-                                },
-                                headerTintColor: '#fff',
-                                headerTitleStyle: {
-                                    fontWeight: 'bold',
-                                },
-                            }}
-                        />
-                        <Stack.Screen
-                            name="EditExpense"
-                            component={EditExpenseScreen}
-                            options={{ 
-                                title: 'Edit Expense',
+                            name="SaveExpense"
+                            component={SaveExpenseScreen}
+                            options={{
+                                title: 'Save Expense',
                                 headerShown: true,
                                 headerStyle: {
                                     backgroundColor: '#6200ea',
@@ -302,25 +253,10 @@ const AppNavigator = () => {
                             }}
                         />
                         <Stack.Screen
-                            name="AddUser"
-                            component={AddUserScreen}
+                            name="SaveUser"
+                            component={SaveUserScreen}
                             options={{
-                                title: 'Add User',
-                                headerShown: true,
-                                headerStyle: {
-                                    backgroundColor: '#6200ea',
-                                },
-                                headerTintColor: '#fff',
-                                headerTitleStyle: {
-                                    fontWeight: 'bold',
-                                },
-                            }}
-                        />
-                        <Stack.Screen
-                            name="EditUser"
-                            component={EditUserScreen}
-                            options={{
-                                title: 'Edit User',
+                                title: 'Save User',
                                 headerShown: true,
                                 headerStyle: {
                                     backgroundColor: '#6200ea',

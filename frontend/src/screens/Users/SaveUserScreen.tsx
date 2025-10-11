@@ -3,56 +3,60 @@ import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Text, Card, Title, Button, Divider, ActivityIndicator } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { updateUser, fetchUsers } from '../../redux/slices/usersSlice';
+import { createUser, updateUser, fetchUsers } from '../../redux/slices/usersSlice';
 import { AppDispatch, RootState } from '../../redux/store';
-import { User, RegisterData, RootStackParamList } from '../../types';
+import { RegisterData, User, RootStackParamList } from '../../types';
 import UserForm from '../../components/Users/UserForm';
 
-type EditUserRouteProp = RouteProp<RootStackParamList, 'EditUser'>;
+type SaveUserRouteProp = RouteProp<RootStackParamList, 'SaveUser'>;
 
-const EditUserScreen: React.FC = () => {
+const SaveUserScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigation = useNavigation();
-    const route = useRoute<EditUserRouteProp>();
+    const route = useRoute<SaveUserRouteProp>();
     const userId = route.params?.userId;
+    const isEdit = !!userId;
 
-    if (!userId) {
-        return (
-            <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>User ID is missing. Cannot edit user.</Text>
-                <Button mode="contained" onPress={() => navigation.goBack()}>
-                    Go Back
-                </Button>
-            </View>
-        );
-    }
-
-    const { users, isLoading } = useSelector((state: RootState) => state.users);
+    const { users, isLoading: isUsersLoading } = useSelector((state: RootState) => state.users);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const user = users.find(u => u._id === userId);
 
     useEffect(() => {
-        if (!user && !isLoading) {
+        if (isEdit && !user && !isUsersLoading) {
             dispatch(fetchUsers());
         }
-    }, [user, dispatch, isLoading]);
+    }, [user, dispatch, isUsersLoading, isEdit]);
 
-    const handleSubmit = async (formData: Partial<User>) => {
+    const handleSubmit = async (formData: RegisterData | Partial<User>) => {
         setIsSubmitting(true);
         try {
-            await dispatch(updateUser({ id: userId, data: formData })).unwrap();
-            Alert.alert('Success', 'User updated successfully', [
-                { text: 'OK', onPress: () => navigation.goBack() }
-            ]);
+            if (isEdit) {
+                await dispatch(updateUser({ id: userId, data: formData as Partial<User> })).unwrap();
+                Alert.alert('Success', 'User updated successfully', [
+                    { text: 'OK', onPress: () => navigation.goBack() }
+                ]);
+            } else {
+                // Ensure formData is RegisterData for creation
+                if ('password' in formData) {
+                    await dispatch(createUser(formData as RegisterData)).unwrap();
+                    Alert.alert('Success', 'User created successfully', [
+                        { text: 'OK', onPress: () => navigation.goBack() }
+                    ]);
+                } else {
+                    Alert.alert('Error', 'Password is required for new user creation.');
+                    return; // Exit if password is missing
+                }
+            }
+            navigation.goBack();
         } catch (error: any) {
-            Alert.alert('Error', error.message || 'Failed to update user');
+            Alert.alert('Error', error.message || `Failed to ${isEdit ? 'update' : 'create'} user`);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    if (isLoading) {
+    if (isUsersLoading && isEdit) {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" />
@@ -61,7 +65,7 @@ const EditUserScreen: React.FC = () => {
         );
     }
 
-    if (!user) {
+    if (isEdit && !user) {
         return (
             <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>User not found</Text>
@@ -76,8 +80,10 @@ const EditUserScreen: React.FC = () => {
         <ScrollView style={styles.container}>
             <Card style={styles.card}>
                 <Card.Content>
-                    <Title style={styles.title}>Edit User</Title>
-                    <Text style={styles.subtitle}>Update the user information below</Text>
+                    <Title style={styles.title}>{isEdit ? 'Edit User' : 'Add New User'}</Title>
+                    <Text style={styles.subtitle}>
+                        {isEdit ? 'Update the user information below' : 'Fill in the details to add a new user'}
+                    </Text>
 
                     <Divider style={styles.divider} />
 
@@ -140,4 +146,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EditUserScreen;
+export default SaveUserScreen;
