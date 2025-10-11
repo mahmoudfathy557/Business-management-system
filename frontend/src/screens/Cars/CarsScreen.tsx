@@ -55,7 +55,7 @@ const CarsScreen: React.FC = () => {
         <CarCard
             car={item}
             onPress={() => (navigation as any).navigate('CarDetails' as never, { car: item._id } as never)}
-            onEdit={() => (navigation as any).navigate('EditCar'as never, { car: item._id } as never)}
+            onEdit={() => (navigation as any).navigate('SaveCar' as never, { car: item._id } as never)}
             onDelete={() => handleDeleteCar(item._id)}
             onNavigateToInventory={() => (navigation as any).navigate('CarInventory' as never, { car: item._id } as never)}
             showActions={user?.role === 'admin'}
@@ -82,8 +82,9 @@ const CarsScreen: React.FC = () => {
                 data={filteredCars}
                 renderItem={renderCar}
                 keyExtractor={(item) => {
-                     
-                    return item._id}}
+
+                    return item._id
+                }}
                 ListHeaderComponent={renderHeader}
                 ListEmptyComponent={renderEmpty}
                 refreshControl={

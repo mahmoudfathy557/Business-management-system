@@ -44,9 +44,14 @@ const InventoryScreen: React.FC = () => {
                 onPress: () => handleDeleteProduct(product._id),
             });
         }
+        items.push({
+          title: 'Show Details',
+          onPress: () => (navigation as any).navigate('ProductDetails', { productId: product._id }),
+        });
           return items;
     };
- 
+
+
     const onRefresh = async () => {
         setRefreshing(true);
         setPage(1);

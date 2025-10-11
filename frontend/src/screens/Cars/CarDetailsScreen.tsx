@@ -28,7 +28,7 @@ const CarDetailsScreen: React.FC = () => {
     }, [selectedCar, dispatch, isLoading]);
 
     const handleEdit = () => {
-        (navigation as any).navigate('EditCar', { car });
+        (navigation as any).navigate('SaveCar', { car });
     };
 
     const handleDelete = () => {

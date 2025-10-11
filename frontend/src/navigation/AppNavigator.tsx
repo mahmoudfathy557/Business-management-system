@@ -27,6 +27,7 @@ import UserDetailsScreen from '../screens/Users/UserDetailsScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import InventoryScreen from '../screens/Inventory/InventoryScreen';
+import { withScroll } from '../hoc/withScroll';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -119,7 +120,7 @@ const TabNavigator = () => {
                 <Tab.Screen
                     key={screen.name}
                     name={screen.name}
-                    component={screen.component}
+                    component={withScroll(screen.component)}
                     options={{ title: screen.label }}
                 />
             ))}
@@ -144,7 +145,7 @@ const AppNavigator = () => {
                         <Stack.Screen
                             name="ProductDetails"
                             component={ProductDetailsScreen}
-                            options={{ 
+                            options={{
                                 title: 'Product Details',
                                 headerShown: true,
                                 headerStyle: {
@@ -159,7 +160,7 @@ const AppNavigator = () => {
                         <Stack.Screen
                             name="SaveProduct"
                             component={SaveProductScreen}
-                            options={{ 
+                            options={{
                                 title: 'Save Product',
                                 headerShown: true,
                                 headerStyle: {
@@ -176,7 +177,7 @@ const AppNavigator = () => {
                         <Stack.Screen
                             name="CarDetails"
                             component={CarDetailsScreen}
-                            options={{ 
+                            options={{
                                 title: 'Car Details',
                                 headerShown: true,
                                 headerStyle: {
@@ -206,7 +207,7 @@ const AppNavigator = () => {
                         <Stack.Screen
                             name="CarInventory"
                             component={CarInventoryScreen}
-                            options={{ 
+                            options={{
                                 title: 'Car Inventory',
                                 headerShown: true,
                                 headerStyle: {

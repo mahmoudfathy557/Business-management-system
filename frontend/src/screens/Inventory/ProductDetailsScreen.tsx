@@ -29,7 +29,7 @@ const ProductDetailsScreen: React.FC = () => {
     }, [product, dispatch, isLoading]);
 
     const handleEdit = () => {
-        (navigation as any).navigate('EditProduct', { productId });
+        (navigation as any).navigate('SaveProduct', { productId });
     };
 
     const handleDelete = () => {

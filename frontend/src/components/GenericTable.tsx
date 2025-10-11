@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataTable } from 'react-native-paper';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import { Menu, IconButton } from 'react-native-paper';
 
 interface Column<T> {
@@ -42,23 +42,26 @@ const GenericTable = <T extends object>(props: Props<T>) => {
       {data.length === 0 ? (
         <Text style={styles.noDataText}>No data available</Text>
       ) : (
-        <DataTable>
-          <DataTable.Header>
-            {initialColumns.map((column) => (
-              <DataTable.Title key={column.accessor.toString()}>{column.header}</DataTable.Title>
-            ))}
-            <DataTable.Title>Actions</DataTable.Title>
-          </DataTable.Header>
+        <React.Fragment>
+          <ScrollView horizontal={true}>
+            <DataTable>
+              <DataTable.Header>
+                {initialColumns.map((column) => (
+                  <DataTable.Title style={{ flex: 1, minWidth: 200 }} key={column.accessor.toString()}>{column.header}</DataTable.Title>
+                ))}
+                <DataTable.Title style={{ flex: 1, minWidth: 200 }}>Actions</DataTable.Title>
+              </DataTable.Header>
 
-          {data.slice(from, to).map((item, index) => (
-            <TableRowWithActions
-              key={index.toString()}
-              item={item}
-              columns={initialColumns}
-              menuItems={menuItems}
-            />
-          ))}
-
+              {data.slice(from, to).map((item, index) => (
+                <TableRowWithActions
+                  key={index.toString()}
+                  item={item}
+                  columns={initialColumns}
+                  menuItems={menuItems}
+                />
+              ))}
+            </DataTable>
+          </ScrollView>
           <DataTable.Pagination
             page={page}
             numberOfPages={Math.ceil(data.length / itemsPerPage)}
@@ -70,7 +73,7 @@ const GenericTable = <T extends object>(props: Props<T>) => {
             showFastPaginationControls
             selectPageDropdownLabel={'Rows per page'}
           />
-        </DataTable>
+        </React.Fragment>
       )}
     </View>
   );
@@ -83,17 +86,19 @@ const TableRowWithActions = <T extends object>({ item, columns, menuItems }: { i
   const closeMenu = () => setVisible(false);
 
   const renderMenuItems = (item: any) => {
-     if (!menuItems) return null;
-    return menuItems(item).map((menuItem, index) => <Menu.Item key={index} onPress={menuItem.onPress} title={menuItem.title} />    )
+    if (!menuItems) return null;
+    return menuItems(item).map((menuItem, index) => <Menu.Item key={index} onPress={() => { menuItem.onPress(); closeMenu(); }} title={menuItem.title} />)
 
   }
 
   return (
     <DataTable.Row>
       {columns.map((column) => (
-        <DataTable.Cell key={column.accessor.toString()}>{String(item[column.accessor])}</DataTable.Cell>
+        <DataTable.Cell style={{ flex: 1, minWidth: 200 }} key={column.accessor.toString()}>
+          <Text style={{ textAlign: 'left' }}>{String(item[column.accessor])}</Text>
+        </DataTable.Cell>
       ))}
-      <DataTable.Cell>
+      <DataTable.Cell style={{ flex: 1 }}>
         <Menu
           visible={visible}
           onDismiss={closeMenu}
@@ -114,6 +119,9 @@ const styles = StyleSheet.create({
     padding: 20,
     fontSize: 16,
     color: 'gray',
+  },
+  tableContainer: {
+    width: '100%',
   },
 });
 
